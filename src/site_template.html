@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>IEC Sticker Seti</title>
+<meta name="description" content="IUS Engineering Club sticker seti: seç, A4'e en verimli şekilde yerleştir, kesim paylı yazdır.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap">
+<style>
+/* Layout: a sticker catalogue on blue-grey paper; picked stickers are packed onto A4 sheets laid on a green cutting mat. */
+:root {
+  --bg: #e9eef4; --surface: #ffffff; --ink: #1c2633; --muted: #586679; --line: #cfd9e5;
+  --navy: #154a7f; --honey: #d4962a; --sage: #4f8f6e; --brick: #c4583e;
+  --mat: #3d775a; --mat-line: rgba(255, 255, 255, 0.16); --mat-line-strong: rgba(255, 255, 255, 0.32);
+  --pick: #154a7f; --pick-ink: #ffffff; --chip: #dbe5f0; --mat-ink: #eaf4ee;
+  --display: "Fredoka", "Nunito", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #101823; --surface: #18222f; --ink: #e5ecf4; --muted: #9eadbf; --line: #2b3a4c;
+  --navy: #7ea9db; --honey: #e3a944; --sage: #74b391; --brick: #e07a60;
+  --mat: #2a5640; --mat-line: rgba(255, 255, 255, 0.12); --mat-line-strong: rgba(255, 255, 255, 0.26);
+  --pick: #7ea9db; --pick-ink: #0d1520; --chip: #223246; color-scheme: dark } }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 130px; }
+h1, h2 { font-family: var(--display); font-weight: 700; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.05; color: var(--navy); }
+h2 { font-size: 24px; }
+.lede { max-width: 64ch; color: var(--muted); margin: 10px 0 0; }
+.eyebrow { font: 600 12px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--honey); }
+header.top { display: grid; gap: 6px; margin-bottom: 18px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
+.chip { border: 0; background: var(--chip); color: var(--ink); font: 600 13px var(--body); padding: 7px 13px; border-radius: 999px; cursor: pointer; }
+.chip .n { font-family: var(--mono); color: var(--muted); margin-left: 6px; font-size: 12px; }
+.chip[aria-pressed="true"] { background: var(--pick); color: var(--pick-ink); }
+.chip[aria-pressed="true"] .n { color: inherit; opacity: 0.8; }
+.quick { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 4px; }
+:focus-visible { outline: 3px solid var(--honey); outline-offset: 2px; }
+
+.cat-title { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 12px; }
+.cat-title span { font: 600 12px var(--mono); color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.card { position: relative; background: var(--surface); border: 2px solid transparent; border-radius: 16px; padding: 12px 10px 10px; cursor: pointer; display: grid; gap: 6px; text-align: left; }
+.card:hover { border-color: var(--line); }
+.card[aria-pressed="true"] { border-color: var(--pick); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pick) 22%, transparent); }
+.art { height: 118px; display: grid; place-items: center; }
+.art svg { max-width: 100%; max-height: 118px; filter: drop-shadow(0 2px 3px rgba(15, 30, 50, 0.18)); }
+.meta { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; min-width: 0; }
+.meta .nm { font-size: 13px; font-weight: 500; line-height: 1.3; min-width: 0; }
+.meta .id { font: 600 11px var(--mono); color: var(--muted); flex: none; }
+.tick { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); display: grid; place-items: center; }
+.card[aria-pressed="true"] .tick { background: var(--pick); border-color: var(--pick); }
+.tick svg { width: 13px; height: 13px; opacity: 0; color: var(--pick-ink); }
+.card[aria-pressed="true"] .tick svg { opacity: 1; }
+.qty { display: none; align-items: center; justify-content: space-between; gap: 6px; background: var(--chip); border-radius: 10px; padding: 3px; }
+.card[aria-pressed="true"] .qty { display: flex; }
+.qty button { border: 0; width: 30px; height: 26px; border-radius: 8px; background: var(--surface); color: var(--ink); font: 700 16px var(--body); cursor: pointer; }
+.qty output { font: 600 13px var(--mono); }
+
+.sheet-head { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: end; justify-content: space-between; margin: 46px 0 14px; }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; }
+.ctl { display: grid; gap: 2px; font-size: 13px; color: var(--muted); }
+.ctl b { font: 600 13px var(--mono); color: var(--ink); }
+.ctl input[type=range] { width: 160px; accent-color: var(--navy); }
+.toggle { display: flex; gap: 8px; align-items: center; font-size: 13px; cursor: pointer; }
+.toggle input { accent-color: var(--navy); width: 17px; height: 17px; }
+.stats { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; font: 600 13px var(--mono); color: var(--muted); margin: 0 0 12px; }
+.stats b { color: var(--ink); }
+.stats .hint { font: 600 13px var(--body); padding: 5px 11px; background: var(--honey); color: #1c2633; }
+.mat { background-color: var(--mat); background-image: linear-gradient(var(--mat-line-strong) 1px, transparent 1px), linear-gradient(90deg, var(--mat-line-strong) 1px, transparent 1px), linear-gradient(var(--mat-line) 1px, transparent 1px), linear-gradient(90deg, var(--mat-line) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px; border-radius: 18px; padding: 22px; display: flex; flex-wrap: wrap; gap: 22px; justify-content: center; }
+.page { width: min(100%, 520px); display: grid; gap: 6px; margin: 0; }
+.page svg { width: 100%; height: auto; display: block; background: #ffffff; border-radius: 3px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28); }
+.page .cap { font: 600 12px var(--mono); color: var(--mat-ink); display: flex; justify-content: space-between; }
+.empty { color: var(--mat-ink); max-width: 46ch; text-align: center; padding: 60px 12px; }
+.empty strong { font-family: var(--display); font-size: 22px; display: block; margin-bottom: 6px; }
+.print-help { margin-top: 14px; font-size: 13px; color: var(--muted); max-width: 76ch; }
+.print-help b { color: var(--ink); }
+
+.bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 5; }
+.bar .in { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.sum { font-size: 14px; }
+.sum b { font-family: var(--display); font-size: 20px; color: var(--navy); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 0; border-radius: 10px; padding: 9px 14px; font: 600 14px var(--body); cursor: pointer; background: var(--chip); color: var(--ink); text-decoration: none; display: inline-block; }
+.btn.primary { background: var(--pick); color: var(--pick-ink); }
+.btn.warn { background: var(--brick); color: #fff; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+#printArea { display: none; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color 0.15s, box-shadow 0.15s; } }
+@media (max-width: 520px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ctl input[type=range] { width: 130px; } }
+
+/* Printing: only the A4 sheets, at real size, one per page */
+@page { size: A4 portrait; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .wrap, .bar { display: none !important; }
+  #printArea { display: block; }
+  #printArea svg { display: block; width: 210mm; height: 297mm; break-after: page; page-break-after: always; }
+  #printArea svg:last-child { break-after: auto; page-break-after: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">IUS Engineering Club · çıkartma seçkisi</div>
+    <h1>IEC Sticker Seti</h1>
+    <p class="lede">Kulüp renkleriyle çizilmiş 101 özgün sticker. Beğendiklerine dokun, adet ver; site onları A4 kâğıda en az sayfa tutacak şekilde yerleştirir, kesim payını bırakır ve doğrudan yazdırır.</p>
+  </header>
+
+  <nav class="chips" id="chips" aria-label="Kategori"></nav>
+  <div class="quick">
+    <button class="btn" id="allOne" type="button">Hepsinden 1'er</button>
+    <button class="btn" id="shareLink" type="button">Seçim linkini kopyala</button>
+  </div>
+  <div id="catalog"></div>
+
+  <section aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <div>
+        <div class="eyebrow">A4 · 210 × 297 mm · kenar 10 mm</div>
+        <h2 id="sheetTitle">Kesim yerleşimi</h2>
+      </div>
+      <div class="controls">
+        <label class="ctl" for="gap">Stickerlar arası boşluk <b id="gapOut">6 mm</b>
+          <input id="gap" type="range" min="3" max="12" step="1" value="6"></label>
+        <label class="ctl" for="scale">Boyut <b id="scaleOut">%100</b>
+          <input id="scale" type="range" min="70" max="140" step="5" value="100"></label>
+        <label class="toggle" for="rotate"><input id="rotate" type="checkbox" checked> Döndürerek sığdır</label>
+        <label class="toggle" for="fill"><input id="fill" type="checkbox"> Boşlukları kopyalarla doldur</label>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="mat" id="mat"></div>
+    <p class="print-help"><b>Yazdırırken:</b> ölçek <b>%100 / Gerçek boyut</b>, kenar boşluğu <b>Yok</b>, kâğıt <b>A4</b>. Her sayfanın altındaki 50 mm çizgiyi cetvelle ölç; tutuyorsa ölçü doğrudur. Stickerların beyaz kenarı ve ince gri kesim çizgisi var; aradaki boşluk makasla dönmek için.</p>
+  </section>
+</div>
+
+<div class="bar" role="region" aria-label="Seçim özeti">
+  <div class="in">
+    <div class="sum"><b id="count">0</b> sticker · <span id="pages">0 sayfa</span></div>
+    <div class="actions">
+      <a class="btn" href="#sheetTitle">A4'e git</a>
+      <button class="btn" id="copy" type="button">Listeyi kopyala</button>
+      <button class="btn" id="clear" type="button">Temizle</button>
+      <button class="btn primary" id="print" type="button">Yazdır / PDF</button>
+    </div>
+  </div>
+</div>
+<div id="printArea" aria-hidden="true"></div>
+
+<script>
+const STICKERS = __STICKERS__;
+const CATS = [["kimlik", "Kulüp kimliği"], ["espri", "Mühendis esprileri"], ["maskot", "Maskotlar"], ["etiket", "Kullanışlı etiketler"], ["etkinlik", "Etkinlikler"], ["sarajevo", "Saraybosna ve diller"]];
+const BY_ID = Object.fromEntries(STICKERS.map(s => [s.id, s]));
+const state = { sel: {}, gap: 6, scale: 100, rotate: true, fill: false, filter: "all" };
+const LS = "iec-stickers-site-v1";
+const $ = id => document.getElementById(id);
+
+// ---------------------------------------------------------------- state: hash link > local storage
+function clampState(d) {
+  if (d.sel) state.sel = Object.fromEntries(Object.entries(d.sel).filter(([k, v]) => BY_ID[k] && v > 0).map(([k, v]) => [k, Math.min(30, Math.round(v))]));
+  if (d.gap >= 3 && d.gap <= 12) state.gap = +d.gap;
+  if (d.scale >= 70 && d.scale <= 140) state.scale = +d.scale;
+  if (typeof d.rotate === "boolean") state.rotate = d.rotate;
+  if (typeof d.fill === "boolean") state.fill = d.fill;
+}
+function fromHash() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (!h.has("s")) return null;
+  const sel = {};
+  for (const part of (h.get("s") || "").split(",")) { const [id, n] = part.split("."); if (id) sel[id] = +(n || 1); }
+  return { sel, gap: +(h.get("g") || 6), scale: +(h.get("z") || 100), rotate: h.get("r") !== "0", fill: h.get("f") === "1" };
+}
+function toHash() {
+  const s = Object.entries(state.sel).sort().map(([k, v]) => v > 1 ? `${k}.${v}` : k).join(",");
+  return `#s=${s}&g=${state.gap}&z=${state.scale}&r=${state.rotate ? 1 : 0}&f=${state.fill ? 1 : 0}`;
+}
+function save() {
+  try { localStorage.setItem(LS, JSON.stringify({ sel: state.sel, gap: state.gap, scale: state.scale, rotate: state.rotate, fill: state.fill })); } catch (e) {}
+  try { history.replaceState(null, "", Object.keys(state.sel).length ? toHash() : location.pathname); } catch (e) {}
+}
+function load() {
+  const h = fromHash(); if (h) return clampState(h);
+  try { const d = JSON.parse(localStorage.getItem(LS) || "null"); if (d) clampState(d); } catch (e) {}
+}
+
+// ---------------------------------------------------------------- catalogue
+const tickSvg = '<svg viewBox="0 0 12 12"><path d="M2 6.5 5 9 10 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function buildCatalog() {
+  const all = [["all", "Tümü", STICKERS.length]].concat(CATS.map(([k, n]) => [k, n, STICKERS.filter(s => s.cat === k).length]));
+  $("chips").innerHTML = all.map(([k, n, c]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${k === state.filter}">${n}<span class="n">${c}</span></button>`).join("");
+  $("chips").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    state.filter = b.dataset.f;
+    document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.f === state.filter)));
+    document.querySelectorAll("[data-cat-block]").forEach(sec => { sec.hidden = state.filter !== "all" && sec.dataset.catBlock !== state.filter; });
+  });
+  $("catalog").innerHTML = CATS.map(([k, n]) => {
+    const items = STICKERS.filter(s => s.cat === k);
+    return `<section data-cat-block="${k}"><div class="cat-title"><h2>${n}</h2><span>${items.length} sticker</span></div><div class="grid">` +
+      items.map(s => `<div class="card" role="button" tabindex="0" aria-pressed="false" data-id="${s.id}" aria-label="${s.name}">
+        <span class="tick">${tickSvg}</span><div class="art">${s.svg}</div>
+        <div class="meta"><span class="nm">${s.name}</span><span class="id">${s.id}</span></div>
+        <div class="qty"><button type="button" data-q="-1" aria-label="Bir azalt">−</button><output>1 adet</output><button type="button" data-q="1" aria-label="Bir artır">+</button></div>
+      </div>`).join("") + `</div></section>`;
+  }).join("");
+  $("catalog").addEventListener("click", e => {
+    const card = e.target.closest(".card"); if (!card) return;
+    const id = card.dataset.id, q = e.target.closest("[data-q]");
+    if (q) { const n = (state.sel[id] || 0) + Number(q.dataset.q); if (n <= 0) delete state.sel[id]; else state.sel[id] = Math.min(30, n); }
+    else if (state.sel[id]) delete state.sel[id]; else state.sel[id] = 1;
+    changed();
+  });
+  $("catalog").addEventListener("keydown", e => {
+    if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("card")) { e.preventDefault(); e.target.click(); }
+  });
+}
+function syncCards() {
+  document.querySelectorAll(".card").forEach(c => {
+    const n = state.sel[c.dataset.id] || 0;
+    c.setAttribute("aria-pressed", String(n > 0));
+    c.querySelector("output").textContent = n + " adet";
+  });
+}
+
+// ---------------------------------------------------------------- packing (MaxRects, several orders and scores, best wins)
+// Each sticker is inflated by the gap and the usable area by one gap, so gaps appear only between stickers.
+const USE_W = 190, USE_H = 277, MARGIN = 10;
+
+function newBin(W, H) { return { free: [{ x: 0, y: 0, w: W, h: H }], used: [] }; }
+
+function findSpot(bin, w, h, rotate, score) {
+  let best = null;
+  for (const f of bin.free) {
+    const opts = [[w, h, false]];
+    if (rotate && Math.abs(w - h) > 0.01) opts.push([h, w, true]);
+    for (const [ow, oh, rot] of opts) {
+      if (ow > f.w + 1e-6 || oh > f.h + 1e-6) continue;
+      let s1, s2;
+      if (score === "bssf") { s1 = Math.min(f.w - ow, f.h - oh); s2 = Math.max(f.w - ow, f.h - oh); }
+      else if (score === "baf") { s1 = f.w * f.h - ow * oh; s2 = Math.min(f.w - ow, f.h - oh); }
+      else { s1 = f.y + oh; s2 = f.x; }  // bottom-left
+      if (!best || s1 < best.s1 - 1e-9 || (Math.abs(s1 - best.s1) < 1e-9 && s2 < best.s2)) best = { x: f.x, y: f.y, w: ow, h: oh, rot, s1, s2 };
+    }
+  }
+  return best;
+}
+
+function place(bin, r) {
+  const next = [];
+  for (const f of bin.free) {
+    if (r.x >= f.x + f.w || r.x + r.w <= f.x || r.y >= f.y + f.h || r.y + r.h <= f.y) { next.push(f); continue; }
+    if (r.x > f.x) next.push({ x: f.x, y: f.y, w: r.x - f.x, h: f.h });
+    if (r.x + r.w < f.x + f.w) next.push({ x: r.x + r.w, y: f.y, w: f.x + f.w - r.x - r.w, h: f.h });
+    if (r.y > f.y) next.push({ x: f.x, y: f.y, w: f.w, h: r.y - f.y });
+    if (r.y + r.h < f.y + f.h) next.push({ x: f.x, y: r.y + r.h, w: f.w, h: f.y + f.h - r.y - r.h });
+  }
+  bin.free = next.filter((a, i) => a.w > 0.5 && a.h > 0.5 && !next.some((b, j) => j !== i && b.x <= a.x + 1e-6 && b.y <= a.y + 1e-6 &&
+    b.x + b.w >= a.x + a.w - 1e-6 && b.y + b.h >= a.y + a.h - 1e-6 && (j < i || !(b.x === a.x && b.y === a.y && b.w === a.w && b.h === a.h))));
+  bin.used.push(r);
+}
+
+function runPack(items, order, score, g, rotate) {
+  const W = USE_W + g, H = USE_H + g, list = items.slice();
+  const keys = {
+    area: it => it.w * it.h, maxside: it => Math.max(it.w, it.h), height: it => it.h, width: it => it.w, perim: it => it.w + it.h,
+  };
+  list.sort((a, b) => keys[order](b) - keys[order](a) || b.w * b.h - a.w * a.h);
+  const bins = [];
+  for (const it of list) {
+    let spot = null, bi = -1;
+    for (let i = 0; i < bins.length && !spot; i++) { spot = findSpot(bins[i], it.w + g, it.h + g, rotate, score); if (spot) bi = i; }
+    if (!spot) {
+      bins.push(newBin(W, H)); bi = bins.length - 1;
+      spot = findSpot(bins[bi], it.w + g, it.h + g, rotate, score);
+      if (!spot) return null;  // larger than a page
+    }
+    place(bins[bi], { ...spot, it });
+  }
+  return bins;
+}
+
+function measure(bins) {
+  const last = bins[bins.length - 1];
+  const lastH = last ? Math.max(...last.used.map(r => r.y + r.h)) : 0;
+  return { pages: bins.length, lastH };
+}
+
+function bestPack(scale = state.scale, fill = state.fill) {
+  const g = state.gap, k = scale / 100, items = [];
+  for (const [id, n] of Object.entries(state.sel)) {
+    const s = BY_ID[id]; const w = s.mm * k, h = w * s.h / s.w;
+    for (let i = 0; i < n; i++) items.push({ s, w, h });
+  }
+  if (!items.length) return { bins: [], added: 0 };
+  let best = null;
+  for (const order of ["area", "maxside", "height", "width", "perim"]) {
+    for (const score of ["bssf", "baf", "bl"]) {
+      const bins = runPack(items, order, score, g, state.rotate);
+      if (!bins) continue;
+      const m = measure(bins);
+      if (!best || m.pages < best.m.pages || (m.pages === best.m.pages && m.lastH < best.m.lastH - 0.01)) best = { bins, m, score };
+    }
+  }
+  if (!best) return { bins: [], added: 0, tooBig: true };
+  let added = 0;
+  if (fill) {
+    // Fill leftover space with copies of the picked stickers, smallest first, without opening a new page.
+    const kinds = Object.keys(state.sel).map(id => { const s = BY_ID[id]; const w = s.mm * k; return { s, w, h: w * s.h / s.w }; })
+      .sort((a, b) => a.w * a.h - b.w * b.h);
+    let progress = true;
+    while (progress && added < 400) {
+      progress = false;
+      for (const kind of kinds.slice().reverse()) {  // try bigger ones first so small ones fill what is left
+        for (const bin of best.bins) {
+          const spot = findSpot(bin, kind.w + g, kind.h + g, state.rotate, "bssf");
+          if (spot) { place(bin, { ...spot, it: kind, extra: true }); added++; progress = true; break; }
+        }
+      }
+    }
+  }
+  return { bins: best.bins, added };
+}
+
+// The largest smaller size that saves a sheet, if any (5 % steps, down to 70 %).
+function shrinkHint(pages) {
+  if (pages < 2) return null;
+  for (let z = state.scale - 5; z >= 70; z -= 5) {
+    const n = bestPack(z, false).bins.length;
+    if (n < pages) return { z, n };
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------- drawing
+// Each copy gets its own ids (A02's arc text), so a copy never points at a hidden one.
+let uidN = 0;
+function inner(svg) {
+  const body = svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+  const ids = [...body.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  if (!ids.length) return body;
+  const n = ++uidN;
+  return ids.reduce((b, id) => b.split(`"${id}"`).join(`"${id}-${n}"`).split(`#${id}`).join(`#${id}-${n}`), body);
+}
+function sheetSvg(bin, i, total, forPrint) {
+  const g = state.gap;
+  const body = bin.used.map(r => {
+    const s = r.it.s, w = r.it.w, h = r.it.h, x = MARGIN + r.x, y = MARGIN + r.y;
+    const el = `<svg width="${w.toFixed(2)}" height="${h.toFixed(2)}" viewBox="0 0 ${s.w} ${s.h}">${inner(s.svg)}</svg>`;
+    return r.rot ? `<g transform="translate(${(x + h).toFixed(2)} ${y.toFixed(2)}) rotate(90)">${el}</g>`
+                 : `<g transform="translate(${x.toFixed(2)} ${y.toFixed(2)})">${el}</g>`;
+  }).join("");
+  const ruler = `<g font-family="IBM Plex Mono, monospace" font-size="2.6" fill="#7b8899"><path d="M10 291 h50 M10 289.5 v3 M60 289.5 v3" stroke="#7b8899" stroke-width="0.3"/>
+    <text x="63" y="292">50 mm · IEC sticker seti · sayfa ${i + 1}/${total} · boşluk ${g} mm</text></g>`;
+  const guide = forPrint ? "" : '<rect x="10" y="10" width="190" height="277" fill="none" stroke="#d9e2ec" stroke-width="0.3" stroke-dasharray="2 2"/>';
+  const size = forPrint ? ' width="210mm" height="297mm"' : "";
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 297"${size} role="img" aria-label="A4 sayfa ${i + 1}">${guide}${body}${ruler}</svg>`;
+}
+
+let lastPack = { bins: [] };
+function render() {
+  const res = bestPack(); lastPack = res;
+  const bins = res.bins, picked = Object.values(state.sel).reduce((a, b) => a + b, 0);
+  const placed = bins.reduce((a, b) => a + b.used.length, 0);
+  $("count").textContent = placed;
+  $("pages").textContent = bins.length + " A4 sayfa";
+  $("gapOut").textContent = state.gap + " mm";
+  $("scaleOut").textContent = "%" + state.scale;
+  $("print").disabled = !bins.length;
+  const area = bins.reduce((a, b) => a + b.used.reduce((s, r) => s + r.it.w * r.it.h, 0), 0);
+  const hint = shrinkHint(bins.length);
+  $("stats").innerHTML = bins.length ? `<span><b>${picked}</b> seçili</span>${res.added ? `<span><b>+${res.added}</b> kopya boşlukları doldurdu</span>` : ""}<span><b>${bins.length}</b> sayfa</span><span>kâğıt kullanımı <b>%${Math.round(100 * area / (bins.length * 210 * 297))}</b></span>` +
+    (hint ? `<button class="btn hint" type="button" data-z="${hint.z}">Boyutu %${hint.z} yap: ${hint.n} sayfaya sığar</button>` : "") : "";
+  if (res.tooBig) { $("mat").innerHTML = '<div class="empty"><strong>Bir sticker sayfaya sığmıyor</strong>Boyutu küçült.</div>'; return; }
+  if (!bins.length) { $("mat").innerHTML = '<div class="empty"><strong>Henüz sticker seçmedin</strong>Yukarıdaki kartlara dokun; seçtiklerin burada A4 kâğıda kesim boşluklarıyla, en az sayfa tutacak şekilde dizilir.</div>'; $("printArea").innerHTML = ""; return; }
+  $("mat").innerHTML = bins.map((b, i) => `<figure class="page">${sheetSvg(b, i, bins.length, false)}<figcaption class="cap"><span>Sayfa ${i + 1} / ${bins.length}</span><span>${b.used.length} sticker</span></figcaption></figure>`).join("");
+  $("printArea").innerHTML = bins.map((b, i) => sheetSvg(b, i, bins.length, true)).join("");
+}
+
+let renderTimer = null;
+function changed() { syncCards(); save(); clearTimeout(renderTimer); renderTimer = setTimeout(render, 60); }
+
+function listText() {
+  const rows = Object.entries(state.sel).sort().map(([id, n]) => `${id} ×${n}  ${BY_ID[id].name}`);
+  return `IEC sticker seçimi (${rows.length} çeşit, boşluk ${state.gap} mm, boyut %${state.scale})\n${location.href}\n` + rows.join("\n");
+}
+async function copyText(btn, txt, label) {
+  try { await navigator.clipboard.writeText(txt); btn.textContent = "Kopyalandı"; }
+  catch (e) { window.prompt("Kopyala:", txt); }
+  setTimeout(() => btn.textContent = label, 1600);
+}
+
+function bind() {
+  const gap = $("gap"), scale = $("scale"), rot = $("rotate"), fill = $("fill");
+  gap.value = state.gap; scale.value = state.scale; rot.checked = state.rotate; fill.checked = state.fill;
+  gap.addEventListener("input", () => { state.gap = +gap.value; changed(); });
+  scale.addEventListener("input", () => { state.scale = +scale.value; changed(); });
+  rot.addEventListener("change", () => { state.rotate = rot.checked; changed(); });
+  fill.addEventListener("change", () => { state.fill = fill.checked; changed(); });
+  $("stats").addEventListener("click", e => {
+    const b = e.target.closest("[data-z]"); if (!b) return;
+    state.scale = +b.dataset.z; scale.value = state.scale; changed();
+  });
+  $("copy").addEventListener("click", e => copyText(e.currentTarget, listText(), "Listeyi kopyala"));
+  $("shareLink").addEventListener("click", e => copyText(e.currentTarget, location.origin + location.pathname + toHash(), "Seçim linkini kopyala"));
+  $("allOne").addEventListener("click", () => { STICKERS.forEach(s => { if (!state.sel[s.id]) state.sel[s.id] = 1; }); changed(); });
+  const clear = $("clear"); let armed = false, t;
+  clear.addEventListener("click", () => {
+    if (!armed) { armed = true; clear.textContent = "Emin misin?"; clear.classList.add("warn"); t = setTimeout(() => { armed = false; clear.textContent = "Temizle"; clear.classList.remove("warn"); }, 3500); return; }
+    clearTimeout(t); armed = false; clear.textContent = "Temizle"; clear.classList.remove("warn");
+    state.sel = {}; changed();
+  });
+  $("print").addEventListener("click", async () => {
+    clearTimeout(renderTimer); render();
+    try { await document.fonts.ready; } catch (e) {}
+    window.print();
+  });
+}
+
+load(); buildCatalog(); bind(); syncCards(); render();
+</script>
+</body>
+</html>
