@@ -47,6 +47,8 @@ header.top { display: grid; gap: 6px; margin-bottom: 18px; }
 
 .cat-title { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 12px; }
 .cat-title span { font: 600 12px var(--mono); color: var(--muted); }
+.new, .cat-title .new { font: 700 10px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; background: var(--honey); color: #1c2633; padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; }
+.cat-title .new { margin-left: 0; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .card { position: relative; background: var(--surface); border: 2px solid transparent; border-radius: 16px; padding: 12px 10px 10px; cursor: pointer; display: grid; gap: 6px; text-align: left; }
 .card:hover { border-color: var(--line); }
@@ -114,7 +116,7 @@ header.top { display: grid; gap: 6px; margin-bottom: 18px; }
   <header class="top">
     <div class="eyebrow">IUS Engineering Club · çıkartma seçkisi</div>
     <h1>IEC Sticker Seti</h1>
-    <p class="lede">Kulüp renkleriyle çizilmiş 101 özgün sticker. Beğendiklerine dokun, adet ver; site onları A4 kâğıda en az sayfa tutacak şekilde yerleştirir, kesim payını bırakır ve doğrudan yazdırır.</p>
+    <p class="lede">Kulüp renkleriyle çizilmiş <span id="total">201</span> özgün sticker; bazılarında kulüp mührümüz var. Beğendiklerine dokun, adet ver; site onları A4 kâğıda en az sayfa tutacak şekilde yerleştirir, kesim payını bırakır ve doğrudan yazdırır.</p>
   </header>
 
   <nav class="chips" id="chips" aria-label="Kategori"></nav>
@@ -160,7 +162,13 @@ header.top { display: grid; gap: 6px; margin-bottom: 18px; }
 
 <script>
 const STICKERS = __STICKERS__;
-const CATS = [["kimlik", "Kulüp kimliği"], ["espri", "Mühendis esprileri"], ["maskot", "Maskotlar"], ["etiket", "Kullanışlı etiketler"], ["etkinlik", "Etkinlikler"], ["sarajevo", "Saraybosna ve diller"]];
+// [key, title, new in set 2]
+const CATS = [["logolu", "Logolu", true], ["kimlik", "Kulüp kimliği"], ["ari", "Arı serisi", true], ["tatli", "Tatlı donanım", true],
+  ["maskot", "Maskotlar"], ["espri", "Mühendis esprileri"], ["espri2", "Yeni espriler", true], ["rozet", "Başarı rozetleri", true],
+  ["hex", "Hex çıkartmalar", true], ["etiket", "Kullanışlı etiketler"], ["etkinlik", "Etkinlikler"], ["sarajevo", "Saraybosna ve diller"]];
+const NEW_TAG = '<span class="new">yeni</span>';
+// The seal is an image inside the stickers; printing waits until it is decoded.
+const SEALS = ["assets/seal.png", "assets/seal-white.png"].map(src => { const im = new Image(); im.src = src; return im.decode().catch(() => {}); });
 const BY_ID = Object.fromEntries(STICKERS.map(s => [s.id, s]));
 const state = { sel: {}, gap: 6, scale: 100, rotate: true, fill: false, filter: "all" };
 const LS = "iec-stickers-site-v1";
@@ -197,17 +205,18 @@ function load() {
 // ---------------------------------------------------------------- catalogue
 const tickSvg = '<svg viewBox="0 0 12 12"><path d="M2 6.5 5 9 10 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function buildCatalog() {
-  const all = [["all", "Tümü", STICKERS.length]].concat(CATS.map(([k, n]) => [k, n, STICKERS.filter(s => s.cat === k).length]));
-  $("chips").innerHTML = all.map(([k, n, c]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${k === state.filter}">${n}<span class="n">${c}</span></button>`).join("");
+  $("total").textContent = STICKERS.length;
+  const all = [["all", "Tümü", STICKERS.length]].concat(CATS.map(([k, n, isNew]) => [k, n, STICKERS.filter(s => s.cat === k).length, isNew]));
+  $("chips").innerHTML = all.map(([k, n, c, isNew]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${k === state.filter}">${n}${isNew ? NEW_TAG : ""}<span class="n">${c}</span></button>`).join("");
   $("chips").addEventListener("click", e => {
     const b = e.target.closest(".chip"); if (!b) return;
     state.filter = b.dataset.f;
     document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.f === state.filter)));
     document.querySelectorAll("[data-cat-block]").forEach(sec => { sec.hidden = state.filter !== "all" && sec.dataset.catBlock !== state.filter; });
   });
-  $("catalog").innerHTML = CATS.map(([k, n]) => {
+  $("catalog").innerHTML = CATS.map(([k, n, isNew]) => {
     const items = STICKERS.filter(s => s.cat === k);
-    return `<section data-cat-block="${k}"><div class="cat-title"><h2>${n}</h2><span>${items.length} sticker</span></div><div class="grid">` +
+    return `<section data-cat-block="${k}"><div class="cat-title"><h2>${n}</h2>${isNew ? NEW_TAG : ""}<span>${items.length} sticker</span></div><div class="grid">` +
       items.map(s => `<div class="card" role="button" tabindex="0" aria-pressed="false" data-id="${s.id}" aria-label="${s.name}">
         <span class="tick">${tickSvg}</span><div class="art">${s.svg}</div>
         <div class="meta"><span class="nm">${s.name}</span><span class="id">${s.id}</span></div>
@@ -423,6 +432,7 @@ function bind() {
   $("print").addEventListener("click", async () => {
     clearTimeout(renderTimer); render();
     try { await document.fonts.ready; } catch (e) {}
+    await Promise.all(SEALS);
     window.print();
   });
 }

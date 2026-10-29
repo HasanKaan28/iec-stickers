@@ -1,6 +1,6 @@
 # IEC Sticker Seti
 
-IUS Engineering Club için çizilmiş 101 özgün sticker. Site: https://hasankaan28.github.io/iec-stickers/
+IUS Engineering Club için çizilmiş 201 özgün sticker; logolu olanlar kulüp mührünü (assets/seal*.png) kullanır. Site: https://hasankaan28.github.io/iec-stickers/
 
 - Stickerları seç, adet ver.
 - Site seçimi A4 kâğıda en az sayfa tutacak şekilde yerleştirir (MaxRects, gerekirse 90° döndürerek) ve stickerlar arasında makasla kesim payı bırakır.

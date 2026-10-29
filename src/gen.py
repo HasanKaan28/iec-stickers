@@ -1,4 +1,4 @@
-"""IEC sticker set: ~100 original stickers drawn as SVG in the club palette.
+"""IEC sticker set: ~200 original stickers drawn as SVG in the club palette (set 2 added 2026-10-29).
 
 Every sticker is a simple white-bordered shape (circle, rounded rectangle, pill, hexagon, ...), so it can be cut
 by hand with scissors. Writes stickers.json: [{id, cat, name, w, h, mm, svg}], where w/h is the viewBox and mm
@@ -31,16 +31,16 @@ def t(x, y, s, size, fill=INK, font=F, weight=600, anchor="middle", ls=0, extra=
 # ---------------------------------------------------------------- cut shapes (white border + inner panel)
 
 def circle(c, r, fill, ring=None):
-    out = f'<circle cx="{c}" cy="{c}" r="{r}" fill="{W}" stroke="{CUT}" stroke-width="1.4"/>'
-    out += f'<circle cx="{c}" cy="{c}" r="{r - 10}" fill="{fill}"/>'
+    out = f'<circle cx="{c}" cy="{c}" r="{r}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut"/>'
+    out += f'<circle class="sk-pnl" cx="{c}" cy="{c}" r="{r - 10}" fill="{fill}"/>'
     if ring:
         out += f'<circle cx="{c}" cy="{c}" r="{r - 17}" fill="none" stroke="{ring}" stroke-width="2.5" stroke-dasharray="1 6" stroke-linecap="round"/>'
     return out
 
 
 def rrect(w, h, rad, fill, inset=10, stroke=None):
-    out = f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="{rad}" fill="{W}" stroke="{CUT}" stroke-width="1.4"/>'
-    out += f'<rect x="{inset}" y="{inset}" width="{w - 2 * inset}" height="{h - 2 * inset}" rx="{max(rad - inset + 2, 2)}" fill="{fill}"'
+    out = f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="{rad}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut"/>'
+    out += f'<rect class="sk-pnl" x="{inset}" y="{inset}" width="{w - 2 * inset}" height="{h - 2 * inset}" rx="{max(rad - inset + 2, 2)}" fill="{fill}"'
     out += (f' stroke="{stroke}" stroke-width="3"/>' if stroke else "/>")
     return out
 
@@ -49,24 +49,24 @@ def hexagon(c, r, fill):
     def pts(rr):
         return " ".join(f"{c + rr * math.cos(math.radians(60 * i - 90)):.1f},{c + rr * math.sin(math.radians(60 * i - 90)):.1f}"
                         for i in range(6))
-    return (f'<polygon points="{pts(r)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-            f'<polygon points="{pts(r - 11)}" fill="{fill}" stroke-linejoin="round"/>')
+    return (f'<polygon points="{pts(r)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+            f'<polygon class="sk-pnl" points="{pts(r - 11)}" fill="{fill}" stroke-linejoin="round"/>')
 
 
 def burst(c, r, n, fill):
     def pts(r1, r2):
         return " ".join(f"{c + (r1 if i % 2 == 0 else r2) * math.cos(math.pi * i / n):.1f},"
                         f"{c + (r1 if i % 2 == 0 else r2) * math.sin(math.pi * i / n):.1f}" for i in range(2 * n))
-    return (f'<polygon points="{pts(r, r - 9)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-            f'<polygon points="{pts(r - 10, r - 19)}" fill="{fill}" stroke-linejoin="round"/>')
+    return (f'<polygon points="{pts(r, r - 9)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+            f'<polygon class="sk-pnl" points="{pts(r - 10, r - 19)}" fill="{fill}" stroke-linejoin="round"/>')
 
 
 def shield(w, h, fill):
     def p(i):
         return (f"M{w / 2} {i} L{w - i} {i + 14} L{w - i} {h * 0.5} Q{w - i} {h * 0.82} {w / 2} {h - i} "
                 f"Q{i} {h * 0.82} {i} {h * 0.5} L{i} {i + 14} Z")
-    return (f'<path d="{p(2)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-            f'<path d="{p(12)}" fill="{fill}"/>')
+    return (f'<path d="{p(2)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+            f'<path class="sk-pnl" d="{p(12)}" fill="{fill}"/>')
 
 
 def bubble(w, h, fill, tail_x=None):
@@ -76,15 +76,15 @@ def bubble(w, h, fill, tail_x=None):
         b = h - 34
         return (f"M{i + r} {i} H{w - i - r} Q{w - i} {i} {w - i} {i + r} V{b - r} Q{w - i} {b} {w - i - r} {b} "
                 f"H{tx + 22} L{tx - 6} {h - i - 4} L{tx + 2} {b} H{i + r} Q{i} {b} {i} {b - r} V{i + r} Q{i} {i} {i + r} {i} Z")
-    return (f'<path d="{p(2, 26)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-            f'<path d="{p(11, 18)}" fill="{fill}" stroke-linejoin="round"/>')
+    return (f'<path d="{p(2, 26)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+            f'<path class="sk-pnl" d="{p(11, 18)}" fill="{fill}" stroke-linejoin="round"/>')
 
 
 def tag(w, h, fill):
     def p(i):
         return f"M{h / 2 + i * 0.4} {i} H{w - i - 14} Q{w - i} {i} {w - i} {i + 14} V{h - i - 14} Q{w - i} {h - i} {w - i - 14} {h - i} H{h / 2 + i * 0.4} L{i} {h / 2} Z"
-    return (f'<path d="{p(2)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-            f'<path d="{p(11)}" fill="{fill}" stroke-linejoin="round"/>'
+    return (f'<path d="{p(2)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+            f'<path class="sk-pnl" d="{p(11)}" fill="{fill}" stroke-linejoin="round"/>'
             f'<circle cx="{h / 2 + 4}" cy="{h / 2}" r="7" fill="{W}"/>')
 
 
@@ -92,8 +92,8 @@ def ticket(w, h, fill):
     def p(i, notch):
         return (f"M{i} {i} H{w - i} V{h / 2 - notch} A{notch} {notch} 0 0 0 {w - i} {h / 2 + notch} V{h - i} H{i} "
                 f"V{h / 2 + notch} A{notch} {notch} 0 0 0 {i} {h / 2 - notch} Z")
-    return (f'<path d="{p(2, 16)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-            f'<path d="{p(11, 9)}" fill="{fill}"/>')
+    return (f'<path d="{p(2, 16)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+            f'<path class="sk-pnl" d="{p(11, 9)}" fill="{fill}"/>')
 
 
 # ---------------------------------------------------------------- drawing parts
@@ -360,6 +360,13 @@ def ruler(x, y, w, h, fill=HONEYL):
     return o
 
 
+def ohm(cx, cy, k, color, width):
+    """Omega drawn as a stroke (our fonts have no Greek)."""
+    return (f'<path d="M{cx - k:.1f} {cy + k * 0.9:.1f} H{cx - k * 0.42:.1f} Q{cx - k * 1.05:.1f} {cy + k * 0.2:.1f} {cx - k * 0.9:.1f} {cy - k * 0.3:.1f} '
+            f'A{k * 0.95:.1f} {k * 0.95:.1f} 0 1 1 {cx + k * 0.9:.1f} {cy - k * 0.3:.1f} Q{cx + k * 1.05:.1f} {cy + k * 0.2:.1f} {cx + k * 0.42:.1f} {cy + k * 0.9:.1f} '
+            f'H{cx + k:.1f}" fill="none" stroke="{color}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"/>')
+
+
 # ---------------------------------------------------------------- A · IEC identity
 
 def wordmark_gear(cx, cy, s):
@@ -367,11 +374,11 @@ def wordmark_gear(cx, cy, s):
 
 
 add("A01", "kimlik", "IEC dişli rozet", 200, 200, 50, hexagon(100, 98, NAVY9) + wordmark_gear(100, 92, 120)
-    + t(100, 158, "ENGINEERING", 11, W, M, 700, ls=1.5) + t(100, 172, "CLUB", 11, HONEY, M, 700, ls=2))
+    + t(100, 158, "ENGINEERING", 10.5, W, M, 700, ls=1.2) + t(100, 172, "CLUB", 11, HONEY, M, 700, ls=2))
 add("A02", "kimlik", "IEC · Sarajevo · 2026", 200, 200, 50, circle(100, 98, SKY, NAVY4)
     + f'<path id="arcA02" d="M30 104 A70 70 0 0 1 170 104" fill="none"/>'
     + f'<text font-family="{M}" font-size="11.5" font-weight="700" fill="{NAVY}" letter-spacing="1.6"><textPath href="#arcA02" startOffset="50%" text-anchor="middle">IUS ENGINEERING CLUB</textPath></text>'
-    + gear(100, 112, 34, 27, 10, NAVY, 14, SKY) + t(100, 172, "SARAJEVO · 2026", 12, NAVY9, M, 700, ls=1.5))
+    + gear(100, 112, 34, 27, 10, NAVY, 14, SKY) + t(100, 165, "SARAJEVO · 2026", 10, NAVY9, M, 700, ls=0.8))
 add("A03", "kimlik", "IEC est. 2026", 300, 120, 70, rrect(300, 120, 58, NAVY) + gear(68, 60, 28, 22, 10, HONEY, 10, NAVY)
     + t(178, 70, "IEC", 46, W, G, 700) + t(178, 94, "EST. 2026", 13, HONEYL, M, 700, ls=3))
 add("A04", "kimlik", "Kulüp sloganı", 300, 170, 75, rrect(300, 170, 26, PAPER, stroke=NAVY)
@@ -413,9 +420,9 @@ add("B01", "espri", "It works on my machine", 240, 200, 55, rrect(240, 200, 28, 
 add("B02", "espri", "Bug değil, özellik", 220, 220, 52, circle(110, 108, HONEYL) + bug(110, 86, 70)
     + t(110, 154, "not a bug,", 18, NAVY9, F, 600) + t(110, 176, "a feature", 20, BRICK, F, 700))
 add("B03", "espri", "Ohm my God", 300, 120, 70, rrect(300, 120, 58, NAVY9) + resistor(76, 60, 44)
-    + t(196, 66, "Ohm my God", 24, W, F, 700) + t(196, 90, "Ω", 18, HONEY, F, 700))
+    + t(196, 66, "Ohm my God", 24, W, F, 700) + ohm(196, 85, 7, HONEY, 2.6))
 add("B04", "espri", "Resistance is futile", 220, 220, 52, circle(110, 108, SKY) + resistor(110, 82, 70)
-    + t(110, 140, "RESISTANCE", 18, NAVY9, F, 700) + t(110, 162, "IS FUTILE", 18, NAVY9, F, 700) + t(110, 182, "(if < 1 Ω)", 13, NAVY, M, 600))
+    + t(110, 140, "RESISTANCE", 18, NAVY9, F, 700) + t(110, 162, "IS FUTILE", 18, NAVY9, F, 700) + t(110, 182, "(if < 1 ohm)", 13, NAVY, M, 600))
 add("B05", "espri", "Trust me, I'm an engineer", 300, 130, 72, rrect(300, 130, 24, HONEY) + gear(52, 65, 30, 24, 10, NAVY9, 11, HONEY)
     + t(178, 58, "Trust me,", 26, NAVY9, F, 700) + t(178, 90, "I'm an engineer", 21, W, F, 700))
 add("B06", "espri", "I void warranties", 200, 200, 48, burst(100, 98, 14, BRICK) + wrench(100, 78, 70, W)
@@ -423,9 +430,9 @@ add("B06", "espri", "I void warranties", 200, 200, 48, burst(100, 98, 14, BRICK)
 add("B07", "espri", "Ctrl + Z", 300, 120, 70, rrect(300, 120, 26, SKY) + keycap(28, 30, 96, "Ctrl") + t(150, 66, "+", 28, NAVY9, F, 700)
     + keycap(176, 30, 96, "Z"))
 add("B08", "espri", "404: sleep not found", 220, 200, 52, rrect(220, 200, 30, NAVY9) + t(110, 92, "404", 58, HONEY, M, 700)
-    + t(110, 128, "sleep", 22, W, F, 600) + t(110, 154, "not found", 22, W, F, 600) + t(160, 66, "z", 18, SKY, F, 700) + t(176, 52, "z", 13, SKY, F, 700))
+    + t(110, 128, "sleep", 22, W, F, 600) + t(110, 154, "not found", 22, W, F, 600) + t(172, 58, "z", 16, SKY, F, 700) + t(186, 44, "z", 12, SKY, F, 700))
 add("B09", "espri", "Coffee → Code", 300, 120, 70, rrect(300, 120, 58, CREAM, stroke=HONEY) + cup(58, 62, 52)
-    + t(170, 72, "coffee", 22, NAVY9, F, 600) + t(216, 72, "→", 22, HONEY, F, 700) + t(254, 72, "</>", 20, NAVY, M, 700))
+    + t(170, 72, "coffee", 22, NAVY9, F, 600) + f'<path d="M208 65 H229 M222 58 L230 65 L222 72" fill="none" stroke="{HONEY}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' + t(254, 72, "</>", 20, NAVY, M, 700))
 add("B10", "espri", "Hello, World!", 260, 180, 60, rrect(260, 180, 20, PAPER)
     + terminal(22, 22, 216, 136, [("$ ./hello", SAGEL), ("Hello, World!", HONEY), ("$ _", W)]))
 add("B11", "espri", "There's no place like 127.0.0.1", 220, 220, 52, circle(110, 108, SAGEL)
@@ -433,8 +440,8 @@ add("B11", "espri", "There's no place like 127.0.0.1", 220, 220, 52, circle(110,
     + f'<rect x="100" y="114" width="20" height="26" fill="{HONEY}"/>' + t(110, 162, "no place like", 15, NAVY9, F, 600)
     + t(110, 182, "127.0.0.1", 18, NAVY, M, 700))
 add("B12", "espri", "git push --force", 220, 200, 52,
-    f'<path d="M110 6 L214 190 H6 Z" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
-    f'<path d="M110 26 L196 180 H24 Z" fill="{HONEY}" stroke-linejoin="round"/>'
+    f'<path d="M110 6 L214 190 H6 Z" fill="{W}" stroke="{CUT}" stroke-width="1.4" class="sk-cut" stroke-linejoin="round"/>'
+    f'<path class="sk-pnl" d="M110 26 L196 180 H24 Z" fill="{HONEY}" stroke-linejoin="round"/>'
     + t(110, 108, "!", 44, NAVY9, F, 700) + t(110, 140, "git push", 15, NAVY9, M, 700) + t(110, 158, "--force", 15, NAVY9, M, 700)
     + t(110, 174, "(please don't)", 10, NAVY9, F, 600))
 add("B13", "espri", "Measure twice, cut once", 300, 130, 72, rrect(300, 130, 22, PAPER, stroke=SAGE) + ruler(26, 26, 248, 30)
@@ -447,9 +454,9 @@ add("B15", "espri", "Runs on caffeine", 260, 150, 60, rrect(260, 150, 30, SAGEL)
 add("B16", "espri", "It compiled!", 200, 200, 48, burst(100, 98, 18, SAGE) + t(100, 88, "IT", 22, W, F, 700)
     + t(100, 116, "COMPILED!", 22, W, F, 700) + star(56, 140, 9, HONEY) + star(146, 64, 7, HONEY) + star(140, 142, 6, W))
 add("B17", "espri", "Unutulan noktalı virgül", 200, 200, 45, circle(100, 98, SKY)
-    + f'<circle cx="100" cy="62" r="22" fill="{NAVY}"/><circle cx="100" cy="114" r="22" fill="{NAVY}"/>'
-    + f'<path d="M116 128 Q114 152 92 164" fill="none" stroke="{NAVY}" stroke-width="12" stroke-linecap="round"/>'
-    + face(100, 64, 34, "confused", W) + face(100, 116, 34, "sleepy", W) + t(100, 182, "forgot me again?", 12, NAVY9, F, 600))
+    + f'<circle cx="100" cy="46" r="19" fill="{NAVY}"/><circle cx="100" cy="94" r="19" fill="{NAVY}"/>'
+    + f'<path d="M114 106 Q112 128 92 138" fill="none" stroke="{NAVY}" stroke-width="11" stroke-linecap="round"/>'
+    + face(100, 48, 30, "confused", W) + face(100, 96, 30, "sleepy", W) + t(100, 160, "forgot me", 14, NAVY9, F, 700) + t(100, 176, "again?", 14, NAVY9, F, 700))
 add("B18", "espri", "418 I'm a teapot", 220, 200, 52, rrect(220, 200, 30, CREAM, stroke=HONEY) + dzezva(96, 84, 62)
     + t(110, 154, "ERROR 418", 18, BRICK, M, 700) + t(110, 176, "I'm a teapot", 17, NAVY9, F, 600))
 add("B19", "espri", "while(alive) learn()", 300, 120, 70, rrect(300, 120, 20, NAVY9)
@@ -477,16 +484,16 @@ add("B25", "espri", "0 bugs*", 200, 200, 45, circle(100, 98, SAGE) + t(100, 108,
 def gear_mascot(sid, name, kind, extra="", label=None, fill=HONEY, bg=SKY):
     body = circle(100, 98, bg) + gear(100, 92, 64, 54, 12, fill) + f'<circle cx="100" cy="92" r="46" fill="{fill}"/>' + face(100, 94, 70, kind) + extra
     if label:
-        body += t(100, 176, label, 16, NAVY9, F, 700)
+        body += t(100, 171, label, 15, NAVY9, F, 700)
     add(sid, "maskot", name, 200, 200, 48, body)
 
 
 gear_mascot("C01", "Dişli · mutlu", "happy", label="hi!")
-gear_mascot("C02", "Dişli · uykulu", "sleepy", t(156, 46, "z", 22, NAVY, F, 700) + t(170, 30, "z", 15, NAVY, F, 700), "5 more min", NAVY4, SKY)
+gear_mascot("C02", "Dişli · uykulu", "sleepy", t(150, 48, "z", 13, NAVY, F, 700), "5 more min", NAVY4, SKY)
 gear_mascot("C03", "Dişli · kahveli", "coffee", cup(150, 128, 36), "fuelled", HONEY, CREAM)
 gear_mascot("C04", "Dişli · havalı", "cool", "", "cool gear", SAGE, SAGEL)
-gear_mascot("C05", "Dişli · aşık", "love", "", "I ♥ eng", BRICK, CREAM)
-gear_mascot("C06", "Dişli · şaşkın", "confused", t(158, 50, "?!", 28, BRICK, F, 700), "debugging", NAVY4, SKY)
+gear_mascot("C05", "Dişli · aşık", "love", t(82, 172, "I", 15, NAVY9, F, 700) + heart(97, 166, 6) + t(121, 172, "eng", 15, NAVY9, F, 700), None, BRICK, CREAM)
+gear_mascot("C06", "Dişli · şaşkın", "confused", t(146, 58, "?!", 20, BRICK, F, 700), "debugging", NAVY4, SKY)
 add("C07", "maskot", "Direnç dostu", 220, 200, 52, rrect(220, 200, 34, CREAM)
     + f'<path d="M20 92 H200" stroke="{NAVY4}" stroke-width="7" stroke-linecap="round"/>'
     + f'<rect x="56" y="54" width="108" height="76" rx="34" fill="{HONEYL}" stroke="{INK}" stroke-width="3"/>'
@@ -500,13 +507,13 @@ add("C10", "maskot", "Fikir ampulü", 200, 200, 48, circle(100, 98, NAVY) + bulb
     + f'<path d="M100 22 V34 M44 44 l9 9 M156 44 l-9 9 M30 90 h12 M158 90 h12" stroke="{HONEYL}" stroke-width="4" stroke-linecap="round"/>'
     + t(100, 168, "idea!", 18, W, F, 700))
 add("C11", "maskot", "Çip dostu", 200, 200, 48, circle(100, 98, SKY) + chip(100, 92, 90, NAVY9) + face(100, 94, 50, "happy", W)
-    + t(100, 176, "smart chip", 15, NAVY9, F, 700))
+    + t(100, 170, "smart chip", 15, NAVY9, F, 700))
 add("C12", "maskot", "Robot · beep boop", 200, 200, 48, circle(100, 98, SAGEL) + robot(100, 100, 92, W)
-    + t(100, 176, "beep boop", 16, NAVY9, F, 700))
+    + t(100, 170, "beep boop", 16, NAVY9, F, 700))
 add("C13", "maskot", "Lastik ördek", 200, 200, 48, circle(100, 98, NAVY) + duck(104, 90, 90, HONEY)
     + t(100, 168, "quack.", 18, W, F, 700))
 add("C14", "maskot", "Marshmallow", 200, 200, 48, circle(100, 98, HONEYL) + marshmallow(100, 90, 96)
-    + t(100, 172, "squishy but stable", 13, NAVY9, F, 700))
+    + t(100, 158, "squishy but", 13, NAVY9, F, 700) + t(100, 174, "stable", 13, NAVY9, F, 700))
 add("C15", "maskot", "Kod kedisi", 220, 200, 52, rrect(220, 200, 34, SKY) + laptop(110, 132, 104, NAVY9, NAVY4) + cat(110, 74, 70, HONEY)
     + t(110, 128, "</>", 14, HONEY, M, 700))
 add("C16", "maskot", "Kondansatör · şarjlı", 200, 200, 48, circle(100, 98, CREAM)
@@ -548,13 +555,12 @@ add("D09", "etiket", "Takım: ___", 300, 110, 60, rrect(300, 110, 22, W, stroke=
 add("D10", "etiket", "IEC Lab malı", 300, 110, 60, rrect(300, 110, 22, NAVY9) + gear(56, 55, 26, 20, 10, HONEY, 9, NAVY9)
     + t(176, 52, "PROPERTY OF", 14, HONEYL, M, 700, ls=2) + t(176, 80, "IEC LAB", 28, W, F, 700))
 label("D11", "Laba geri getir", "RETURN TO LAB", "thank you!", SKY, NAVY9)
-add("D12", "etiket", "Test edildi", 220, 200, 50, circle(110, 100, W) + f'<circle cx="110" cy="100" r="78" fill="none" stroke="{SAGE}" stroke-width="5"/>'
-    + check(110, 82, 40, SAGE, 10) + t(110, 136, "TESTED", 22, SAGE, F, 700) + t(110, 158, "date ____", 12, NAVY9, M, 600))
+add("D12", "etiket", "Test edildi", 220, 220, 50, circle(110, 100, W) + '<g transform="translate(0 10)">' + (f'<circle cx="110" cy="100" r="78" fill="none" stroke="{SAGE}" stroke-width="5"/>'
+    + check(110, 82, 40, SAGE, 10) + t(110, 136, "TESTED", 22, SAGE, F, 700) + t(110, 158, "date ____", 12, NAVY9, M, 600)) + '</g>')
 label("D13", "Ortak laptop", "SHARED LAPTOP", "please log out", NAVY4)
 label("D14", "Sıcak havya", "HOT! 400 °C", "soldering iron · do not touch", BRICK)
-add("D15", "etiket", "Gözlük tak", 220, 200, 50, circle(110, 100, HONEY)
-    + f'<rect x="54" y="74" width="48" height="34" rx="14" fill="{NAVY9}"/><rect x="118" y="74" width="48" height="34" rx="14" fill="{NAVY9}"/>'
-    + f'<path d="M102 88 H118" stroke="{NAVY9}" stroke-width="5"/>' + t(110, 140, "GOGGLES", 20, NAVY9, F, 700) + t(110, 160, "ON", 16, W, F, 700))
+add("D15", "etiket", "Gözlük tak", 220, 220, 50, circle(110, 100, HONEY) + '<g transform="translate(0 10)">' + (f'<rect x="54" y="74" width="48" height="34" rx="14" fill="{NAVY9}"/><rect x="118" y="74" width="48" height="34" rx="14" fill="{NAVY9}"/>'
+    + f'<path d="M102 88 H118" stroke="{NAVY9}" stroke-width="5"/>' + t(110, 140, "GOGGLES", 20, NAVY9, F, 700) + t(110, 160, "ON", 16, W, F, 700)) + '</g>')
 add("D16", "etiket", "Su iç, sonra debug", 200, 230, 48, rrect(200, 230, 34, SKY)
     + f'<path d="M100 40 C80 72 66 92 66 112 A34 34 0 0 0 134 112 C134 92 120 72 100 40 Z" fill="{NAVY4}"/>'
     + face(100, 116, 40, "happy", W) + t(100, 182, "hydrate,", 18, NAVY9, F, 600) + t(100, 204, "then debug", 18, NAVY, F, 700))
@@ -571,8 +577,8 @@ add("E03", "etkinlik", "IUS TechSummit 2027", 300, 130, 72, rrect(300, 130, 24, 
 add("E04", "etkinlik", "Algolab", 220, 200, 52, rrect(220, 200, 30, NAVY)
     + t(110, 70, "ALGOLAB", 28, W, F, 700) + t(110, 108, ">>> python", 15, HONEY, M, 600) + t(110, 132, ">> matlab", 15, SAGEL, M, 600)
     + t(110, 168, "fastest code wins", 13, SKY, F, 600))
-add("E05", "etkinlik", "Prompt Wars", 220, 200, 52, circle(110, 100, BRICK) + wizard_hat(110, 80, 70, NAVY9)
-    + t(110, 146, "PROMPT", 22, W, F, 700) + t(110, 170, "WARS", 22, CREAM, F, 700))
+add("E05", "etkinlik", "Prompt Wars", 220, 220, 52, circle(110, 100, BRICK) + '<g transform="translate(0 10)">' + (wizard_hat(110, 80, 70, NAVY9)
+    + t(110, 146, "PROMPT", 22, W, F, 700) + t(110, 170, "WARS", 22, CREAM, F, 700)) + '</g>')
 add("E06", "etkinlik", "Merlin Düellosu", 200, 200, 48, circle(100, 98, NAVY9) + wizard_hat(100, 80, 76, NAVY)
     + t(100, 150, "MERLIN DUEL", 17, HONEY, F, 700) + t(100, 170, "say the word", 12, SKY, M, 600))
 add("E07", "etkinlik", "Marshmallow şampiyonu", 200, 220, 48, rrect(200, 220, 30, HONEYL) + trophy(100, 78, 100)
@@ -601,19 +607,19 @@ add("E14", "etkinlik", "Sertifika kazandım", 200, 230, 48, rrect(200, 230, 26, 
 
 add("F01", "sarajevo", "Saraybosna mühendisi", 200, 220, 48, rrect(200, 220, 30, SKY) + sebilj(100, 112, 110)
     + t(100, 180, "SARAJEVO", 20, NAVY9, F, 700) + t(100, 200, "engineer", 14, NAVY, M, 600))
-add("F02", "sarajevo", "Kahva & kod", 220, 200, 52, circle(110, 100, CREAM) + dzezva(98, 86, 62)
-    + t(110, 152, "kahva & kod", 20, NAVY9, F, 700) + t(110, 172, "Bosnian coffee build", 10, NAVY, M, 600))
+add("F02", "sarajevo", "Kahva & kod", 220, 220, 52, circle(110, 100, CREAM) + '<g transform="translate(0 10)">' + (dzezva(98, 86, 62)
+    + t(110, 152, "kahva & kod", 20, NAVY9, F, 700) + t(110, 172, "Bosnian coffee", 10, NAVY, M, 600)) + '</g>')
 add("F03", "sarajevo", "Çay & kod", 200, 200, 48, circle(100, 98, SAGEL) + tea_glass(100, 82, 76)
     + t(100, 160, "çay & kod", 20, NAVY9, F, 700))
 add("F04", "sarajevo", "Hello World · 3 dil", 300, 150, 72, rrect(300, 150, 22, NAVY9)
     + t(150, 50, "Hello, World!", 20, W, M, 700) + t(150, 82, "Merhaba, Dünya!", 20, HONEY, M, 700) + t(150, 114, "Zdravo, svijete!", 20, SAGEL, M, 700))
 add("F05", "sarajevo", "Ćevapi ile çalışır", 300, 120, 70, rrect(300, 120, 58, HONEY)
     + "".join(f'<rect x="{40 + i * 13}" y="{40 + (i % 2) * 6}" width="11" height="40" rx="5.5" fill="{BRICK}"/>' for i in range(5))
-    + t(190, 66, "ĆEVAPI", 26, NAVY9, F, 700) + t(190, 88, "powered", 14, W, M, 700, ls=2))
+    + t(190, 66, "ĆEVAPI", 26, NAVY9, G, 700) + t(190, 88, "powered", 14, W, M, 700, ls=2))
 add("F06", "sarajevo", "Baščaršija → Lab", 260, 200, 60, rrect(260, 200, 26, SAGEL)
     + f'<rect x="124" y="40" width="10" height="148" fill="{NAVY9}"/>'
     + f'<path d="M30 52 H186 L206 72 L186 92 H30 Z" fill="{NAVY}"/><path d="M230 108 H74 L54 128 L74 148 H230 Z" fill="{HONEY}"/>'
-    + t(106, 79, "BAŠČARŠIJA", 15, W, F, 700) + t(152, 135, "IEC LAB 50 m", 15, NAVY9, F, 700))
+    + t(106, 79, "BAŠČARŠIJA", 14, W, G, 700) + t(152, 135, "IEC LAB 50 m", 15, NAVY9, F, 700))
 add("F07", "sarajevo", "TR · EN · BS", 300, 110, 70, rrect(300, 110, 54, PAPER, stroke=NAVY)
     + f'<rect x="22" y="22" width="80" height="66" rx="26" fill="{BRICK}"/><rect x="110" y="22" width="80" height="66" rx="26" fill="{NAVY}"/><rect x="198" y="22" width="80" height="66" rx="26" fill="{HONEY}"/>'
     + t(62, 64, "TR", 24, W, F, 700) + t(150, 64, "EN", 24, W, F, 700) + t(238, 64, "BS", 24, NAVY9, F, 700))
@@ -627,6 +633,730 @@ add("F11", "sarajevo", "Kolay gelsin", 200, 200, 45, circle(100, 98, HONEYL) + g
     + t(100, 142, "kolay", 22, NAVY9, F, 700) + t(100, 166, "gelsin!", 22, HONEY, F, 700))
 add("F12", "sarajevo", "Inženjer", 300, 110, 70, tag(300, 110, NAVY) + t(180, 56, "INŽENJER", 26, W, F, 700)
     + t(180, 80, "engineer · mühendis", 12, SKY, M, 600))
+
+# ---------------------------------------------------------------- set 2 (2026-10-29): logo, bee, cute hardware, badges, hex, jokes
+# The club seal is the official PNG (assets/), never redrawn. Shapes stay scissor-friendly.
+
+SEAL, SEAL_W = "assets/seal.png", "assets/seal-white.png"
+
+
+def seal(cx, cy, d, white=False):
+    return (f'<image href="{SEAL_W if white else SEAL}" x="{cx - d / 2:.1f}" y="{cy - d / 2:.1f}" '
+            f'width="{d}" height="{d}"/>')
+
+
+def hexs(fill, w=174, h=200):
+    """Point-up hex in a tight box: at mm=44 it is the common 2 in laptop hex (44 x 51 mm)."""
+    cx, cy = w / 2, h / 2
+
+    def pts(r):
+        return " ".join(f"{cx + r * math.cos(math.radians(60 * i - 90)):.1f},{cy + r * math.sin(math.radians(60 * i - 90)):.1f}"
+                        for i in range(6))
+    return (f'<polygon class="sk-cut" points="{pts(98)}" fill="{W}" stroke="{CUT}" stroke-width="1.4" stroke-linejoin="round"/>'
+            f'<polygon class="sk-pnl" points="{pts(87)}" fill="{fill}" stroke-linejoin="round"/>')
+
+
+def scallop(c, R, n, fill):
+    """Rosette badge: n bumps; the panel keeps a safe disc of radius R - 10."""
+    def d(r):
+        pts = [(c + r * math.cos(2 * math.pi * i / n - math.pi / 2), c + r * math.sin(2 * math.pi * i / n - math.pi / 2))
+               for i in range(n + 1)]
+        a = 2 * r * math.sin(math.pi / n) * 0.62
+        return f"M{pts[0][0]:.1f} {pts[0][1]:.1f} " + " ".join(f"A{a:.1f} {a:.1f} 0 0 1 {x:.1f} {y:.1f}" for x, y in pts[1:]) + " Z"
+    return (f'<path class="sk-cut" d="{d(R)}" fill="{W}" stroke="{CUT}" stroke-width="1.4"/>'
+            f'<path class="sk-pnl" d="{d(R - 10)}" fill="{fill}"/>')
+
+
+def honeycomb(inside, cell, color, x0, y0, x1, y1, width=1.6):
+    """Hex cells that lie fully inside the region tested by inside(x, y)."""
+    out, dx, dy = [], cell * math.sqrt(3), cell * 1.5
+    for j in range(int((y1 - y0) / dy) + 3):
+        for i in range(int((x1 - x0) / dx) + 3):
+            x, y = x0 + i * dx + (dx / 2 if j % 2 else 0), y0 + j * dy
+            v = [(x + cell * math.cos(math.radians(60 * k - 90)), y + cell * math.sin(math.radians(60 * k - 90))) for k in range(6)]
+            if all(inside(a, b) for a, b in v):
+                out.append(f'<polygon points="{" ".join(f"{a:.1f},{b:.1f}" for a, b in v)}" fill="none" stroke="{color}" stroke-width="{width}"/>')
+    return "".join(out)
+
+
+def in_hex(cx, cy, r):
+    return lambda x, y: abs(x - cx) <= r * 0.866 and abs(y - cy) <= r - abs(x - cx) * 0.577
+
+
+def in_circle(cx, cy, r):
+    return lambda x, y: (x - cx) ** 2 + (y - cy) ** 2 <= r * r
+
+
+def limb(x1, y1, x2, y2, s):
+    return f'<path d="M{x1:.1f} {y1:.1f} L{x2:.1f} {y2:.1f}" stroke="{INK}" stroke-width="{s * 0.06:.1f}" stroke-linecap="round"/>'
+
+
+def bee(cx, cy, s, kind="happy", wing=SKY):
+    """Round honey bee. Box: x cx +- 0.5s, y cy - 0.73s .. cy + 0.59s."""
+    r, sw = s / 2, s * 0.035
+    o = ""
+    for d in (-1, 1):
+        wx, wy = cx + d * r * 0.62, cy - r * 0.78
+        o += (f'<ellipse cx="{wx:.1f}" cy="{wy:.1f}" rx="{r * 0.4:.1f}" ry="{r * 0.27:.1f}" transform="rotate({-28 * d} {wx:.1f} {wy:.1f})" '
+              f'fill="{wing}" stroke="{INK}" stroke-width="{sw:.1f}"/>')
+        o += (f'<path d="M{cx + d * r * 0.22:.1f} {cy - r * 0.9:.1f} Q{cx + d * r * 0.26:.1f} {cy - r * 1.28:.1f} {cx + d * r * 0.5:.1f} {cy - r * 1.34:.1f}" '
+              f'fill="none" stroke="{INK}" stroke-width="{sw:.1f}" stroke-linecap="round"/>'
+              f'<circle cx="{cx + d * r * 0.5:.1f}" cy="{cy - r * 1.34:.1f}" r="{r * 0.1:.1f}" fill="{INK}"/>')
+    o += (f'<path d="M{cx - r * 0.13:.1f} {cy + r * 0.95:.1f} L{cx:.1f} {cy + r * 1.17:.1f} L{cx + r * 0.13:.1f} {cy + r * 0.95:.1f} Z" '
+          f'fill="{INK}" stroke-linejoin="round"/>')
+    o += f'<circle cx="{cx}" cy="{cy}" r="{r:.1f}" fill="{HONEY}"/>'
+    for y1, y2 in ((0.3, 0.5), (0.68, 0.84)):
+        a, b = cy + r * y1, cy + r * y2
+        xa, xb = r * math.sqrt(1 - y1 * y1), r * math.sqrt(1 - y2 * y2)
+        o += (f'<path d="M{cx - xa:.1f} {a:.1f} H{cx + xa:.1f} A{r:.1f} {r:.1f} 0 0 1 {cx + xb:.1f} {b:.1f} H{cx - xb:.1f} '
+              f'A{r:.1f} {r:.1f} 0 0 1 {cx - xa:.1f} {a:.1f} Z" fill="{NAVY9}"/>')
+    o += f'<circle cx="{cx}" cy="{cy}" r="{r:.1f}" fill="none" stroke="{INK}" stroke-width="{sw:.1f}"/>'
+    return o + face(cx, cy - r * 0.22, s * 0.6, kind)
+
+
+def hardhat(cx, cy, r):
+    yb, yt = cy - r * 0.62, cy - r * 1.16
+    return (f'<path d="M{cx - r * 0.74:.1f} {yb:.1f} Q{cx - r * 0.74:.1f} {yt:.1f} {cx:.1f} {yt:.1f} Q{cx + r * 0.74:.1f} {yt:.1f} {cx + r * 0.74:.1f} {yb:.1f} Z" '
+            f'fill="{W}" stroke="{INK}" stroke-width="{r * 0.07:.1f}" stroke-linejoin="round"/>'
+            f'<path d="M{cx:.1f} {yt + r * 0.06:.1f} V{yb:.1f}" stroke="{HONEY}" stroke-width="{r * 0.16:.1f}"/>'
+            f'<rect x="{cx - r * 0.95:.1f}" y="{yb - r * 0.06:.1f}" width="{r * 1.9:.1f}" height="{r * 0.15:.1f}" rx="{r * 0.075:.1f}" '
+            f'fill="{W}" stroke="{INK}" stroke-width="{r * 0.07:.1f}"/>')
+
+
+def gradcap(cx, cy, r):
+    top = cy - r * 1.02
+    return (f'<path d="M{cx - r * 0.55:.1f} {cy - r * 0.74:.1f} Q{cx:.1f} {cy - r * 0.6:.1f} {cx + r * 0.55:.1f} {cy - r * 0.74:.1f} '
+            f'V{top + r * 0.1:.1f} H{cx - r * 0.55:.1f} Z" fill="{NAVY9}"/>'
+            f'<polygon points="{cx - r:.1f},{top:.1f} {cx:.1f},{top - r * 0.32:.1f} {cx + r:.1f},{top:.1f} {cx:.1f},{top + r * 0.32:.1f}" '
+            f'fill="{NAVY9}" stroke="{INK}" stroke-width="{r * 0.05:.1f}" stroke-linejoin="round"/>'
+            f'<path d="M{cx:.1f} {top:.1f} L{cx + r * 0.8:.1f} {top + r * 0.1:.1f} V{top + r * 0.52:.1f}" fill="none" stroke="{HONEY}" '
+            f'stroke-width="{r * 0.07:.1f}" stroke-linecap="round" stroke-linejoin="round"/>'
+            f'<circle cx="{cx + r * 0.8:.1f}" cy="{top + r * 0.58:.1f}" r="{r * 0.1:.1f}" fill="{HONEY}"/>')
+
+
+def headphones(cx, cy, r, fill=BRICK):
+    return (f'<path d="M{cx - r * 0.98:.1f} {cy - r * 0.12:.1f} Q{cx - r * 1.02:.1f} {cy - r * 1.28:.1f} {cx:.1f} {cy - r * 1.24:.1f} '
+            f'Q{cx + r * 1.02:.1f} {cy - r * 1.28:.1f} {cx + r * 0.98:.1f} {cy - r * 0.12:.1f}" fill="none" stroke="{INK}" '
+            f'stroke-width="{r * 0.12:.1f}" stroke-linecap="round"/>'
+            + "".join(f'<rect x="{cx + d * r * 0.97 - r * 0.17:.1f}" y="{cy - r * 0.44:.1f}" width="{r * 0.34:.1f}" height="{r * 0.62:.1f}" '
+                      f'rx="{r * 0.15:.1f}" fill="{fill}" stroke="{INK}" stroke-width="{r * 0.06:.1f}"/>' for d in (-1, 1)))
+
+
+def helmet(cx, cy, r):
+    return (f'<circle cx="{cx}" cy="{cy - r * 0.12:.1f}" r="{r * 1.5:.1f}" fill="{W}" fill-opacity="0.18" stroke="{W}" stroke-width="{r * 0.1:.1f}"/>'
+            f'<path d="M{cx - r * 1.05:.1f} {cy - r * 0.6:.1f} A{r * 1.2:.1f} {r * 1.2:.1f} 0 0 1 {cx - r * 0.3:.1f} {cy - r * 1.3:.1f}" '
+            f'fill="none" stroke="{W}" stroke-width="{r * 0.12:.1f}" stroke-linecap="round" opacity="0.8"/>')
+
+
+def partyhat(cx, cy, r):
+    return (f'<path d="M{cx - r * 0.34:.1f} {cy - r * 0.86:.1f} L{cx + r * 0.12:.1f} {cy - r * 1.62:.1f} L{cx + r * 0.38:.1f} {cy - r * 0.82:.1f} Z" '
+            f'fill="{BRICK}" stroke="{INK}" stroke-width="{r * 0.06:.1f}" stroke-linejoin="round"/>'
+            f'<circle cx="{cx - r * 0.02:.1f}" cy="{cy - r * 1.02:.1f}" r="{r * 0.06:.1f}" fill="{W}"/>'
+            f'<circle cx="{cx + r * 0.16:.1f}" cy="{cy - r * 1.24:.1f}" r="{r * 0.06:.1f}" fill="{W}"/>'
+            f'<circle cx="{cx + r * 0.12:.1f}" cy="{cy - r * 1.68:.1f}" r="{r * 0.12:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{r * 0.05:.1f}"/>')
+
+
+def confetti(items):
+    return "".join(f'<rect x="{x - 3}" y="{y - 1.6}" width="6" height="3.2" rx="1" fill="{c}" transform="rotate({a} {x} {y})"/>'
+                   for x, y, c, a in items)
+
+
+def iron(x, y, s, ang, handle=BRICK):
+    """Soldering iron, tip at (x, y); the handle points along ang degrees."""
+    return (f'<g transform="rotate({ang} {x} {y})">'
+            f'<path d="M{x} {y} L{x + s * 0.2:.1f} {y - s * 0.04:.1f} V{y + s * 0.04:.1f} Z" fill="{INK}" stroke="{INK}" stroke-width="{s * 0.02:.1f}" stroke-linejoin="round"/>'
+            f'<rect x="{x + s * 0.18:.1f}" y="{y - s * 0.03:.1f}" width="{s * 0.38:.1f}" height="{s * 0.06:.1f}" fill="{NAVY4}"/>'
+            f'<rect x="{x + s * 0.54:.1f}" y="{y - s * 0.085:.1f}" width="{s * 0.5:.1f}" height="{s * 0.17:.1f}" rx="{s * 0.085:.1f}" '
+            f'fill="{handle}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/></g>')
+
+
+def smoke(x, y, k):
+    return (f'<path d="M{x} {y} q-{k * 0.5} -{k * 0.6} 0 -{k * 1.2} t0 -{k * 1.2} M{x + k * 0.9} {y - k * 0.3} q-{k * 0.5} -{k * 0.6} 0 -{k * 1.2}" '
+            f'fill="none" stroke="{NAVY4}" stroke-width="{k * 0.32:.1f}" stroke-linecap="round"/>')
+
+
+def magnifier(cx, cy, r, glass=W):
+    return (f'<path d="M{cx + r * 0.72:.1f} {cy + r * 0.72:.1f} L{cx + r * 1.55:.1f} {cy + r * 1.55:.1f}" stroke="{INK}" stroke-width="{r * 0.34:.1f}" stroke-linecap="round"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{glass}" fill-opacity="0.85" stroke="{INK}" stroke-width="{r * 0.16:.1f}"/>')
+
+
+def book(cx, cy, s):
+    o = f'<path d="M{cx - s * 0.54:.1f} {cy - s * 0.2:.1f} V{cy + s * 0.32:.1f} H{cx + s * 0.54:.1f} V{cy - s * 0.2:.1f} Z" fill="{NAVY}"/>'
+    for d in (-1, 1):
+        o += (f'<path d="M{cx:.1f} {cy - s * 0.2:.1f} Q{cx + d * s * 0.25:.1f} {cy - s * 0.32:.1f} {cx + d * s * 0.5:.1f} {cy - s * 0.24:.1f} '
+              f'V{cy + s * 0.24:.1f} Q{cx + d * s * 0.25:.1f} {cy + s * 0.18:.1f} {cx:.1f} {cy + s * 0.28:.1f} Z" fill="{W}" stroke="{INK}" '
+              f'stroke-width="{s * 0.03:.1f}" stroke-linejoin="round"/>')
+        for k in range(3):
+            y = cy - s * 0.12 + k * s * 0.1
+            o += f'<path d="M{cx + d * s * 0.1:.1f} {y:.1f} H{cx + d * s * 0.4:.1f}" stroke="{NAVY4}" stroke-width="{s * 0.025:.1f}" stroke-linecap="round"/>'
+    return o
+
+
+def burek(cx, cy, s):
+    pts = " ".join(f"{cx + 0.035 * s * a * math.cos(a):.1f},{cy - s * 0.02 + 0.02 * s * a * math.sin(a):.1f}" for a in [i * 0.25 for i in range(0, 58)])
+    return (f'<ellipse cx="{cx}" cy="{cy + s * 0.08:.1f}" rx="{s * 0.6:.1f}" ry="{s * 0.2:.1f}" fill="{W}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            f'<ellipse cx="{cx}" cy="{cy - s * 0.02:.1f}" rx="{s * 0.5:.1f}" ry="{s * 0.3:.1f}" fill="{HONEYL}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            f'<polyline points="{pts}" fill="none" stroke="{HONEY}" stroke-width="{s * 0.045:.1f}" stroke-linecap="round" stroke-linejoin="round"/>')
+
+
+def sign(x, y, w, h, fill, stroke=INK):
+    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{h * 0.16:.1f}" fill="{fill}" stroke="{stroke}" stroke-width="2.6"/>'
+
+
+def nut(cx, cy, s, kind="happy", fill=NAVY4, hole=PAPER):
+    """Hex nut seen from above: eyes either side of the hole, smile below it."""
+    pts = " ".join(f"{cx + s * 0.5 * math.cos(math.radians(60 * i)):.1f},{cy + s * 0.5 * math.sin(math.radians(60 * i)):.1f}" for i in range(6))
+    return (f'<polygon points="{pts}" fill="{fill}" stroke="{INK}" stroke-width="{s * 0.035:.1f}" stroke-linejoin="round"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{s * 0.4:.1f}" fill="none" stroke="{W}" stroke-width="{s * 0.03:.1f}" opacity="0.45"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{s * 0.13:.1f}" fill="{hole}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            + face(cx, cy + s * 0.064, s * 0.8, kind))
+
+
+def screw(cx, cy, s, kind="happy", head=PAPER, shank=NAVY4):
+    """Screw with a face on its dome head. Box: x cx +- 0.46s, y cy - 0.56s .. cy + 0.6s."""
+    sw = s * 0.035
+    o = (f'<rect x="{cx - s * 0.15:.1f}" y="{cy - s * 0.22:.1f}" width="{s * 0.3:.1f}" height="{s * 0.62:.1f}" fill="{shank}" stroke="{INK}" stroke-width="{sw:.1f}"/>'
+         f'<path d="M{cx - s * 0.15:.1f} {cy + s * 0.4:.1f} L{cx:.1f} {cy + s * 0.6:.1f} L{cx + s * 0.15:.1f} {cy + s * 0.4:.1f} Z" fill="{shank}" '
+         f'stroke="{INK}" stroke-width="{sw:.1f}" stroke-linejoin="round"/>')
+    for k in range(5):
+        y0 = cy - s * 0.1 + k * s * 0.11
+        o += (f'<path d="M{cx - s * 0.15:.1f} {y0 + s * 0.05:.1f} L{cx + s * 0.15:.1f} {y0 - s * 0.03:.1f}" stroke="{W}" '
+              f'stroke-width="{s * 0.028:.1f}" stroke-linecap="round"/>')
+    o += (f'<path d="M{cx - s * 0.46:.1f} {cy - s * 0.18:.1f} Q{cx - s * 0.46:.1f} {cy - s * 0.56:.1f} {cx:.1f} {cy - s * 0.56:.1f} '
+          f'Q{cx + s * 0.46:.1f} {cy - s * 0.56:.1f} {cx + s * 0.46:.1f} {cy - s * 0.18:.1f} Z" fill="{head}" stroke="{INK}" '
+          f'stroke-width="{sw:.1f}" stroke-linejoin="round"/>')
+    return o + face(cx, cy - s * 0.31, s * 0.42, kind)
+
+
+def gear_face(cx, cy, s, fill, kind="happy", rot=0):
+    return gear(cx, cy, s * 0.5, s * 0.4, 10, fill, rot=rot) + f'<circle cx="{cx}" cy="{cy}" r="{s * 0.33:.1f}" fill="{fill}"/>' + face(cx, cy, s * 0.5, kind)
+
+
+def transistor(cx, cy, s, kind="happy"):
+    o = "".join(f'<path d="M{cx + d * s * 0.17:.1f} {cy + s * 0.12:.1f} V{cy + s * 0.58:.1f}" stroke="{NAVY4}" stroke-width="{s * 0.06:.1f}" stroke-linecap="round"/>'
+                for d in (-1, 0, 1))
+    o += (f'<path d="M{cx - s * 0.34:.1f} {cy + s * 0.16:.1f} V{cy - s * 0.08:.1f} Q{cx - s * 0.34:.1f} {cy - s * 0.42:.1f} {cx:.1f} {cy - s * 0.42:.1f} '
+          f'Q{cx + s * 0.34:.1f} {cy - s * 0.42:.1f} {cx + s * 0.34:.1f} {cy - s * 0.08:.1f} V{cy + s * 0.16:.1f} Z" fill="{NAVY9}" stroke="{INK}" '
+          f'stroke-width="{s * 0.035:.1f}" stroke-linejoin="round"/>')
+    return o + face(cx, cy - s * 0.08, s * 0.44, kind, W)
+
+
+def diode(cx, cy, s, kind="happy"):
+    return (f'<path d="M{cx - s * 0.75:.1f} {cy} H{cx + s * 0.75:.1f}" stroke="{NAVY4}" stroke-width="{s * 0.06:.1f}" stroke-linecap="round"/>'
+            f'<rect x="{cx - s * 0.42:.1f}" y="{cy - s * 0.2:.1f}" width="{s * 0.84:.1f}" height="{s * 0.4:.1f}" rx="{s * 0.2:.1f}" fill="{NAVY9}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<rect x="{cx + s * 0.2:.1f}" y="{cy - s * 0.2:.1f}" width="{s * 0.09:.1f}" height="{s * 0.4:.1f}" fill="{HONEYL}"/>'
+            + face(cx - s * 0.08, cy, s * 0.36, kind, W))
+
+
+def knob(cx, cy, s, kind="happy"):
+    o = "".join(f'<path d="M{cx + s * 0.5 * math.cos(math.radians(a)):.1f} {cy + s * 0.5 * math.sin(math.radians(a)):.1f} '
+                f'L{cx + s * 0.6 * math.cos(math.radians(a)):.1f} {cy + s * 0.6 * math.sin(math.radians(a)):.1f}" stroke="{c}" '
+                f'stroke-width="{s * 0.05:.1f}" stroke-linecap="round"/>'
+                for a, c in [(135 + 27 * i, SAGE if i < 5 else (HONEY if i < 8 else BRICK)) for i in range(11)])
+    o += gear(cx, cy, s * 0.42, s * 0.38, 18, NAVY9)
+    o += f'<circle cx="{cx}" cy="{cy}" r="{s * 0.36:.1f}" fill="{NAVY}"/>'
+    o += f'<circle cx="{cx + s * 0.25 * math.cos(math.radians(-50)):.1f}" cy="{cy + s * 0.25 * math.sin(math.radians(-50)):.1f}" r="{s * 0.045:.1f}" fill="{HONEY}"/>'
+    return o + face(cx, cy + s * 0.04, s * 0.42, kind, W)
+
+
+def devboard(cx, cy, s, kind="happy"):
+    w, h = s * 1.2, s * 0.76
+    o = (f'<rect x="{cx - w / 2:.1f}" y="{cy - h / 2:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{s * 0.07:.1f}" fill="{SAGE}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+         f'<rect x="{cx - w / 2 - s * 0.06:.1f}" y="{cy - s * 0.12:.1f}" width="{s * 0.2:.1f}" height="{s * 0.24:.1f}" rx="{s * 0.03:.1f}" fill="{NAVY4}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>')
+    for i in range(10):
+        x = cx - w * 0.36 + i * w * 0.08
+        o += (f'<rect x="{x:.1f}" y="{cy - h / 2 + s * 0.05:.1f}" width="{s * 0.05:.1f}" height="{s * 0.05:.1f}" fill="{HONEY}"/>'
+              f'<rect x="{x:.1f}" y="{cy + h / 2 - s * 0.1:.1f}" width="{s * 0.05:.1f}" height="{s * 0.05:.1f}" fill="{HONEY}"/>')
+    o += f'<circle cx="{cx + w * 0.38:.1f}" cy="{cy - h * 0.18:.1f}" r="{s * 0.035:.1f}" fill="{BRICK}"/>'
+    o += f'<rect x="{cx - s * 0.24:.1f}" y="{cy - s * 0.2:.1f}" width="{s * 0.48:.1f}" height="{s * 0.4:.1f}" rx="{s * 0.06:.1f}" fill="{NAVY9}"/>'
+    return o + face(cx, cy, s * 0.36, kind, W)
+
+
+def servo(cx, cy, s, kind="happy"):
+    return (f'<rect x="{cx - s * 0.62:.1f}" y="{cy - s * 0.04:.1f}" width="{s * 1.24:.1f}" height="{s * 0.1:.1f}" rx="{s * 0.04:.1f}" fill="{NAVY9}"/>'
+            f'<rect x="{cx - s * 0.48:.1f}" y="{cy - s * 0.3:.1f}" width="{s * 0.96:.1f}" height="{s * 0.6:.1f}" rx="{s * 0.08:.1f}" fill="{NAVY4}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<circle cx="{cx - s * 0.22:.1f}" cy="{cy - s * 0.36:.1f}" r="{s * 0.11:.1f}" fill="{PAPER}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            f'<rect x="{cx - s * 0.52:.1f}" y="{cy - s * 0.41:.1f}" width="{s * 0.6:.1f}" height="{s * 0.1:.1f}" rx="{s * 0.05:.1f}" fill="{W}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            + face(cx + s * 0.04, cy + s * 0.02, s * 0.42, kind, INK))
+
+
+def multimeter(cx, cy, s, kind="happy"):
+    return (f'<rect x="{cx - s * 0.36:.1f}" y="{cy - s * 0.5:.1f}" width="{s * 0.72:.1f}" height="{s:.1f}" rx="{s * 0.1:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<rect x="{cx - s * 0.26:.1f}" y="{cy - s * 0.4:.1f}" width="{s * 0.52:.1f}" height="{s * 0.34:.1f}" rx="{s * 0.05:.1f}" fill="{PAPER}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+            f'<circle cx="{cx}" cy="{cy + s * 0.14:.1f}" r="{s * 0.15:.1f}" fill="{NAVY9}"/>'
+            f'<path d="M{cx} {cy + s * 0.14:.1f} L{cx + s * 0.08:.1f} {cy + s * 0.04:.1f}" stroke="{W}" stroke-width="{s * 0.035:.1f}" stroke-linecap="round"/>'
+            f'<circle cx="{cx - s * 0.14:.1f}" cy="{cy + s * 0.39:.1f}" r="{s * 0.045:.1f}" fill="{INK}"/><circle cx="{cx + s * 0.14:.1f}" cy="{cy + s * 0.39:.1f}" r="{s * 0.045:.1f}" fill="{BRICK}"/>'
+            + face(cx, cy - s * 0.22, s * 0.36, kind))
+
+
+def printer3d(cx, cy, s, kind="happy"):
+    return (f'<rect x="{cx - s * 0.5:.1f}" y="{cy - s * 0.52:.1f}" width="{s:.1f}" height="{s * 0.86:.1f}" rx="{s * 0.06:.1f}" fill="none" stroke="{NAVY9}" stroke-width="{s * 0.07:.1f}"/>'
+            f'<rect x="{cx - s * 0.46:.1f}" y="{cy - s * 0.32:.1f}" width="{s * 0.92:.1f}" height="{s * 0.06:.1f}" fill="{NAVY4}"/>'
+            f'<path d="M{cx + s * 0.02:.1f} {cy - s * 0.36:.1f} h{s * 0.16:.1f} v{s * 0.14:.1f} l-{s * 0.08:.1f} {s * 0.08:.1f} l-{s * 0.08:.1f} -{s * 0.08:.1f} Z" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.025:.1f}" stroke-linejoin="round"/>'
+            + heart(cx + s * 0.1, cy + s * 0.08, s * 0.09)
+            + f'<rect x="{cx - s * 0.4:.1f}" y="{cy + s * 0.2:.1f}" width="{s * 0.8:.1f}" height="{s * 0.06:.1f}" fill="{NAVY4}"/>'
+            f'<rect x="{cx - s * 0.56:.1f}" y="{cy + s * 0.32:.1f}" width="{s * 1.12:.1f}" height="{s * 0.32:.1f}" rx="{s * 0.07:.1f}" fill="{NAVY}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            + face(cx, cy + s * 0.48, s * 0.3, kind, W))
+
+
+def magnet(cx, cy, s, kind="happy"):
+    ro, ri = s * 0.46, s * 0.13
+    top, mid = cy - s * 0.4, cy + s * 0.02
+    o = (f'<path d="M{cx - ro:.1f} {top:.1f} V{mid:.1f} A{ro:.1f} {ro:.1f} 0 0 0 {cx + ro:.1f} {mid:.1f} V{top:.1f} H{cx + ri:.1f} V{mid:.1f} '
+         f'A{ri:.1f} {ri:.1f} 0 0 1 {cx - ri:.1f} {mid:.1f} V{top:.1f} Z" fill="{BRICK}" stroke="{INK}" stroke-width="{s * 0.035:.1f}" stroke-linejoin="round"/>')
+    for x in (cx - ro, cx + ri):
+        o += f'<rect x="{x:.1f}" y="{top:.1f}" width="{ro - ri:.1f}" height="{s * 0.14:.1f}" fill="{PAPER}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+    return o + face(cx, mid + s * 0.28, s * 0.3, kind, W)
+
+
+def atom(cx, cy, s, kind="happy"):
+    o = "".join(f'<ellipse cx="{cx}" cy="{cy}" rx="{s * 0.5:.1f}" ry="{s * 0.18:.1f}" transform="rotate({a} {cx} {cy})" fill="none" '
+                f'stroke="{NAVY}" stroke-width="{s * 0.035:.1f}"/>' for a in (0, 60, 120))
+    for a in (0, 60, 120):
+        x = cx + s * 0.5 * math.cos(math.radians(a))
+        y = cy + s * 0.5 * math.sin(math.radians(a))
+        o += f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{s * 0.05:.1f}" fill="{SAGE}"/>'
+    o += f'<circle cx="{cx}" cy="{cy}" r="{s * 0.22:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+    return o + face(cx, cy + s * 0.01, s * 0.3, kind)
+
+
+def calculator(cx, cy, s, kind="happy"):
+    o = (f'<rect x="{cx - s * 0.36:.1f}" y="{cy - s * 0.5:.1f}" width="{s * 0.72:.1f}" height="{s:.1f}" rx="{s * 0.09:.1f}" fill="{NAVY4}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+         f'<rect x="{cx - s * 0.27:.1f}" y="{cy - s * 0.41:.1f}" width="{s * 0.54:.1f}" height="{s * 0.3:.1f}" rx="{s * 0.04:.1f}" fill="{SAGEL}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>')
+    for j in range(3):
+        for i in range(3):
+            o += (f'<rect x="{cx - s * 0.25 + i * s * 0.18:.1f}" y="{cy - s * 0.02 + j * s * 0.15:.1f}" width="{s * 0.13:.1f}" height="{s * 0.1:.1f}" '
+                  f'rx="{s * 0.025:.1f}" fill="{HONEY if (i, j) == (2, 2) else W}"/>')
+    return o + face(cx, cy - s * 0.26, s * 0.3, kind)
+
+
+def floppy(cx, cy, s, kind="happy"):
+    h = s * 0.48
+    return (f'<path d="M{cx - h:.1f} {cy - h:.1f} H{cx + h * 0.7:.1f} L{cx + h:.1f} {cy - h * 0.7:.1f} V{cy + h:.1f} H{cx - h:.1f} Z" fill="{NAVY}" stroke="{INK}" stroke-width="{s * 0.035:.1f}" stroke-linejoin="round"/>'
+            f'<rect x="{cx - h * 0.5:.1f}" y="{cy - h:.1f}" width="{h:.1f}" height="{h * 0.56:.1f}" fill="{NAVY4}"/>'
+            f'<rect x="{cx + h * 0.12:.1f}" y="{cy - h * 0.9:.1f}" width="{h * 0.22:.1f}" height="{h * 0.38:.1f}" fill="{NAVY9}"/>'
+            f'<rect x="{cx - h * 0.72:.1f}" y="{cy - h * 0.1:.1f}" width="{h * 1.44:.1f}" height="{h * 0.98:.1f}" rx="{s * 0.04:.1f}" fill="{PAPER}"/>'
+            + face(cx, cy + h * 0.38, s * 0.42, kind))
+
+
+def usb(cx, cy, s, kind="happy"):
+    return (f'<rect x="{cx - s * 0.17:.1f}" y="{cy - s * 0.6:.1f}" width="{s * 0.34:.1f}" height="{s * 0.28:.1f}" fill="{NAVY4}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            f'<rect x="{cx - s * 0.1:.1f}" y="{cy - s * 0.52:.1f}" width="{s * 0.06:.1f}" height="{s * 0.06:.1f}" fill="{INK}"/>'
+            f'<rect x="{cx + s * 0.04:.1f}" y="{cy - s * 0.52:.1f}" width="{s * 0.06:.1f}" height="{s * 0.06:.1f}" fill="{INK}"/>'
+            f'<rect x="{cx - s * 0.27:.1f}" y="{cy - s * 0.34:.1f}" width="{s * 0.54:.1f}" height="{s * 0.84:.1f}" rx="{s * 0.12:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<circle cx="{cx}" cy="{cy + s * 0.36:.1f}" r="{s * 0.05:.1f}" fill="{NAVY9}"/>'
+            + face(cx, cy + s * 0.02, s * 0.4, kind))
+
+
+def enter_key(cx, cy, s, kind="happy"):
+    return (f'<rect x="{cx - s * 0.5:.1f}" y="{cy - s * 0.44:.1f}" width="{s:.1f}" height="{s * 0.92:.1f}" rx="{s * 0.16:.1f}" fill="{NAVY9}"/>'
+            f'<rect x="{cx - s * 0.44:.1f}" y="{cy - s * 0.42:.1f}" width="{s * 0.88:.1f}" height="{s * 0.74:.1f}" rx="{s * 0.12:.1f}" fill="{W}"/>'
+            + t(cx - s * 0.36, cy - s * 0.24, "enter", s * 0.13, NAVY, M, 700, "start")
+            + face(cx, cy + s * 0.04, s * 0.5, kind))
+
+
+def mouse_pc(cx, cy, s, kind="happy"):
+    return (f'<path d="M{cx:.1f} {cy + s * 0.42:.1f} Q{cx + s * 0.1:.1f} {cy + s * 0.62:.1f} {cx + s * 0.4:.1f} {cy + s * 0.56:.1f}" fill="none" stroke="{INK}" stroke-width="{s * 0.04:.1f}" stroke-linecap="round"/>'
+            + "".join(f'<circle cx="{cx + d * s * 0.22:.1f}" cy="{cy - s * 0.38:.1f}" r="{s * 0.13:.1f}" fill="{NAVY4}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+                      f'<circle cx="{cx + d * s * 0.22:.1f}" cy="{cy - s * 0.38:.1f}" r="{s * 0.07:.1f}" fill="{PEACH}"/>' for d in (-1, 1))
+            + f'<rect x="{cx - s * 0.3:.1f}" y="{cy - s * 0.42:.1f}" width="{s * 0.6:.1f}" height="{s * 0.86:.1f}" rx="{s * 0.3:.1f}" fill="{PAPER}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<path d="M{cx:.1f} {cy - s * 0.42:.1f} V{cy - s * 0.14:.1f}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+            f'<rect x="{cx - s * 0.035:.1f}" y="{cy - s * 0.32:.1f}" width="{s * 0.07:.1f}" height="{s * 0.12:.1f}" rx="{s * 0.035:.1f}" fill="{BRICK}"/>'
+            + face(cx, cy + s * 0.1, s * 0.38, kind))
+
+
+def router(cx, cy, s, kind="happy"):
+    o = "".join(f'<path d="M{cx - s * 0.22 * k:.1f} {cy - s * 0.38 - s * 0.1 * k:.1f} Q{cx:.1f} {cy - s * 0.56 - s * 0.14 * k:.1f} {cx + s * 0.22 * k:.1f} {cy - s * 0.38 - s * 0.1 * k:.1f}" '
+                f'fill="none" stroke="{HONEY}" stroke-width="{s * 0.05:.1f}" stroke-linecap="round"/>' for k in (1, 2))
+    o += "".join(f'<path d="M{cx + d * s * 0.36:.1f} {cy - s * 0.14:.1f} V{cy - s * 0.44:.1f}" stroke="{INK}" stroke-width="{s * 0.06:.1f}" stroke-linecap="round"/>' for d in (-1, 1))
+    o += f'<rect x="{cx - s * 0.5:.1f}" y="{cy - s * 0.16:.1f}" width="{s:.1f}" height="{s * 0.5:.1f}" rx="{s * 0.12:.1f}" fill="{NAVY9}"/>'
+    o += "".join(f'<circle cx="{cx - s * 0.3 + i * s * 0.12:.1f}" cy="{cy + s * 0.24:.1f}" r="{s * 0.025:.1f}" fill="{SAGE}"/>' for i in range(3))
+    return o + face(cx + s * 0.12, cy + s * 0.06, s * 0.36, kind, W)
+
+
+def rover(cx, cy, s, kind="happy"):
+    o = (f'<path d="M{cx + s * 0.18:.1f} {cy - s * 0.12:.1f} V{cy - s * 0.36:.1f}" stroke="{INK}" stroke-width="{s * 0.05:.1f}"/>'
+         f'<rect x="{cx - s * 0.04:.1f}" y="{cy - s * 0.6:.1f}" width="{s * 0.44:.1f}" height="{s * 0.26:.1f}" rx="{s * 0.06:.1f}" fill="{PAPER}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+         + face(cx + s * 0.18, cy - s * 0.47, s * 0.26, kind)
+         + f'<rect x="{cx - s * 0.56:.1f}" y="{cy - s * 0.24:.1f}" width="{s * 0.5:.1f}" height="{s * 0.1:.1f}" fill="{SKY}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+         f'<rect x="{cx - s * 0.5:.1f}" y="{cy - s * 0.14:.1f}" width="{s:.1f}" height="{s * 0.32:.1f}" rx="{s * 0.07:.1f}" fill="{NAVY4}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>')
+    for x in (-0.36, 0, 0.36):
+        o += (f'<circle cx="{cx + s * x:.1f}" cy="{cy + s * 0.3:.1f}" r="{s * 0.13:.1f}" fill="{INK}"/>'
+              f'<circle cx="{cx + s * x:.1f}" cy="{cy + s * 0.3:.1f}" r="{s * 0.05:.1f}" fill="{NAVY4}"/>')
+    return o
+
+
+def drone(cx, cy, s, kind="happy"):
+    o = ""
+    for d in (-1, 1):
+        o += f'<path d="M{cx:.1f} {cy:.1f} L{cx + d * s * 0.42:.1f} {cy - s * 0.16:.1f}" stroke="{NAVY9}" stroke-width="{s * 0.06:.1f}" stroke-linecap="round"/>'
+        o += f'<ellipse cx="{cx + d * s * 0.42:.1f}" cy="{cy - s * 0.2:.1f}" rx="{s * 0.2:.1f}" ry="{s * 0.045:.1f}" fill="{SKY}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+        o += f'<path d="M{cx + d * s * 0.22:.1f} {cy + s * 0.18:.1f} l{d * s * 0.08:.1f} {s * 0.12:.1f}" stroke="{INK}" stroke-width="{s * 0.04:.1f}" stroke-linecap="round"/>'
+    o += f'<rect x="{cx - s * 0.26:.1f}" y="{cy - s * 0.12:.1f}" width="{s * 0.52:.1f}" height="{s * 0.32:.1f}" rx="{s * 0.12:.1f}" fill="{NAVY}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+    return o + face(cx, cy + s * 0.04, s * 0.3, kind, W)
+
+
+def fat_bolt(x, y, s, kind="happy"):
+    pts = [(0.62, 0), (0.08, 0.58), (0.42, 0.58), (0.3, 1.0), (0.92, 0.38), (0.56, 0.38), (0.74, 0)]
+    o = (f'<polygon points="{" ".join(f"{x + a * s:.1f},{y + b * s:.1f}" for a, b in pts)}" fill="{HONEY}" stroke="{INK}" '
+         f'stroke-width="{s * 0.035:.1f}" stroke-linejoin="round"/>')
+    return o + face(x + s * 0.45, y + s * 0.44, s * 0.26, kind)
+
+
+def cookie(cx, cy, r, bite_fill, kind="shock"):
+    o = f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{HONEY}" stroke="{INK}" stroke-width="{r * 0.05:.1f}"/>'
+    for a, k in ((-55, 0.3), (-25, 0.24), (-80, 0.22)):
+        o += f'<circle cx="{cx + r * math.cos(math.radians(a)):.1f}" cy="{cy + r * math.sin(math.radians(a)):.1f}" r="{r * k:.1f}" fill="{bite_fill}"/>'
+    for dx, dy, a in ((-0.55, -0.15, 20), (-0.25, 0.55, -30), (0.45, 0.42, 45), (0.6, 0.1, 10), (-0.5, 0.3, 60)):
+        o += f'<rect x="{cx + r * dx - r * 0.07:.1f}" y="{cy + r * dy - r * 0.05:.1f}" width="{r * 0.14:.1f}" height="{r * 0.1:.1f}" rx="{r * 0.03:.1f}" fill="{NAVY9}" transform="rotate({a} {cx + r * dx:.1f} {cy + r * dy:.1f})"/>'
+    return o + face(cx - r * 0.05, cy + r * 0.05, r * 0.9, kind)
+
+
+def glyph(kind, cx, cy, k, color, width):
+    """Hand-drawn pi, lambda and sigma (no Greek in our fonts)."""
+    d = {"pi": f"M{cx - k} {cy - k * 0.7} Q{cx} {cy - k * 0.95} {cx + k} {cy - k * 0.78} M{cx - k * 0.45} {cy - k * 0.78} Q{cx - k * 0.45} {cy + k * 0.3} {cx - k * 0.75} {cy + k * 0.95} "
+                f"M{cx + k * 0.42} {cy - k * 0.8} Q{cx + k * 0.35} {cy + k * 0.6} {cx + k * 0.85} {cy + k * 0.85}",
+         "lambda": f"M{cx - k * 0.7} {cy - k} Q{cx - k * 0.1} {cy - k * 1.05} {cx + k * 0.1} {cy - k * 0.4} L{cx + k * 0.75} {cy + k} M{cx + k * 0.12} {cy - k * 0.3} L{cx - k * 0.7} {cy + k}",
+         "sigma": f"M{cx + k * 0.8} {cy - k * 0.95} H{cx - k * 0.75} L{cx + k * 0.15} {cy} L{cx - k * 0.75} {cy + k * 0.95} H{cx + k * 0.8}"}[kind]
+    return f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"/>'
+
+
+def owl(cx, cy, s):
+    o = (f'<path d="M{cx - s * 0.36:.1f} {cy - s * 0.3:.1f} L{cx - s * 0.3:.1f} {cy - s * 0.52:.1f} L{cx - s * 0.12:.1f} {cy - s * 0.36:.1f} Z '
+         f'M{cx + s * 0.36:.1f} {cy - s * 0.3:.1f} L{cx + s * 0.3:.1f} {cy - s * 0.52:.1f} L{cx + s * 0.12:.1f} {cy - s * 0.36:.1f} Z" fill="{NAVY4}" stroke-linejoin="round"/>'
+         f'<ellipse cx="{cx}" cy="{cy}" rx="{s * 0.4:.1f}" ry="{s * 0.44:.1f}" fill="{NAVY4}"/>'
+         f'<ellipse cx="{cx}" cy="{cy + s * 0.16:.1f}" rx="{s * 0.24:.1f}" ry="{s * 0.22:.1f}" fill="{SKY}"/>')
+    for d in (-1, 1):
+        o += (f'<circle cx="{cx + d * s * 0.17:.1f}" cy="{cy - s * 0.12:.1f}" r="{s * 0.15:.1f}" fill="{W}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+              f'<circle cx="{cx + d * s * 0.15:.1f}" cy="{cy - s * 0.11:.1f}" r="{s * 0.075:.1f}" fill="{INK}"/>'
+              f'<circle cx="{cx + d * s * 0.13:.1f}" cy="{cy - s * 0.14:.1f}" r="{s * 0.025:.1f}" fill="{W}"/>')
+    return o + f'<path d="M{cx - s * 0.06:.1f} {cy + s * 0.02:.1f} L{cx + s * 0.06:.1f} {cy + s * 0.02:.1f} L{cx:.1f} {cy + s * 0.11:.1f} Z" fill="{HONEY}"/>'
+
+
+def bird(cx, cy, s):
+    o = "".join(f'<path d="M{cx + s * 0.32 + s * 0.2 * math.cos(math.radians(a)):.1f} {cy - s * 0.3 + s * 0.2 * math.sin(math.radians(a)):.1f} '
+                f'l{s * 0.08 * math.cos(math.radians(a)):.1f} {s * 0.08 * math.sin(math.radians(a)):.1f}" stroke="{HONEYL}" stroke-width="{s * 0.04:.1f}" stroke-linecap="round"/>'
+                for a in range(-180, 1, 45))
+    o += f'<circle cx="{cx + s * 0.32:.1f}" cy="{cy - s * 0.3:.1f}" r="{s * 0.14:.1f}" fill="{HONEYL}"/>'
+    o += (f'<ellipse cx="{cx - s * 0.04:.1f}" cy="{cy + s * 0.06:.1f}" rx="{s * 0.36:.1f}" ry="{s * 0.32:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+          f'<path d="M{cx - s * 0.2:.1f} {cy + s * 0.08:.1f} q{s * 0.18:.1f} {s * 0.2:.1f} {s * 0.34:.1f} 0" fill="{HONEYL}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+          f'<path d="M{cx + s * 0.3:.1f} {cy - s * 0.02:.1f} l{s * 0.16:.1f} {s * 0.05:.1f} l-{s * 0.16:.1f} {s * 0.06:.1f} Z" fill="{BRICK}"/>'
+          f'<circle cx="{cx + s * 0.14:.1f}" cy="{cy - s * 0.06:.1f}" r="{s * 0.045:.1f}" fill="{INK}"/>')
+    return o
+
+
+def flag_checkered(cx, cy, s):
+    o = f'<path d="M{cx - s * 0.36:.1f} {cy + s * 0.5:.1f} V{cy - s * 0.48:.1f}" stroke="{INK}" stroke-width="{s * 0.06:.1f}" stroke-linecap="round"/>'
+    for j in range(3):
+        for i in range(4):
+            o += (f'<rect x="{cx - s * 0.33 + i * s * 0.17:.1f}" y="{cy - s * 0.46 + j * s * 0.17:.1f}" width="{s * 0.17:.1f}" height="{s * 0.17:.1f}" '
+                  f'fill="{INK if (i + j) % 2 == 0 else W}"/>')
+    return o + f'<rect x="{cx - s * 0.33:.1f}" y="{cy - s * 0.46:.1f}" width="{s * 0.68:.1f}" height="{s * 0.51:.1f}" fill="none" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+
+
+def clock(cx, cy, r):
+    o = f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{W}" stroke="{INK}" stroke-width="{r * 0.1:.1f}"/>'
+    o += "".join(f'<path d="M{cx + r * 0.72 * math.cos(math.radians(a)):.1f} {cy + r * 0.72 * math.sin(math.radians(a)):.1f} '
+                 f'L{cx + r * 0.84 * math.cos(math.radians(a)):.1f} {cy + r * 0.84 * math.sin(math.radians(a)):.1f}" stroke="{INK}" stroke-width="{r * 0.07:.1f}" stroke-linecap="round"/>'
+                 for a in range(0, 360, 30))
+    return o + (f'<path d="M{cx} {cy} V{cy - r * 0.55:.1f} M{cx} {cy} L{cx + r * 0.4:.1f} {cy + r * 0.18:.1f}" stroke="{BRICK}" stroke-width="{r * 0.1:.1f}" stroke-linecap="round"/>'
+                f'<circle cx="{cx}" cy="{cy}" r="{r * 0.08:.1f}" fill="{INK}"/>')
+
+
+def goggles(cx, cy, s):
+    return (f'<path d="M{cx - s * 0.55:.1f} {cy:.1f} H{cx + s * 0.55:.1f}" stroke="{NAVY9}" stroke-width="{s * 0.1:.1f}" stroke-linecap="round"/>'
+            + "".join(f'<circle cx="{cx + d * s * 0.24:.1f}" cy="{cy}" r="{s * 0.2:.1f}" fill="{SKY}" stroke="{INK}" stroke-width="{s * 0.05:.1f}"/>'
+                      f'<path d="M{cx + d * s * 0.24 - s * 0.1:.1f} {cy - s * 0.06:.1f} q{s * 0.05:.1f} -{s * 0.07:.1f} {s * 0.12:.1f} -{s * 0.06:.1f}" fill="none" stroke="{W}" stroke-width="{s * 0.035:.1f}" stroke-linecap="round"/>'
+                      for d in (-1, 1)))
+
+
+def cursor(x, y, s, fill):
+    return (f'<path d="M{x} {y} L{x:.1f} {y + s:.1f} L{x + s * 0.28:.1f} {y + s * 0.74:.1f} L{x + s * 0.46:.1f} {y + s * 1.08:.1f} L{x + s * 0.6:.1f} {y + s:.1f} '
+            f'L{x + s * 0.42:.1f} {y + s * 0.68:.1f} L{x + s * 0.76:.1f} {y + s * 0.66:.1f} Z" fill="{fill}" stroke="{INK}" stroke-width="{s * 0.06:.1f}" stroke-linejoin="round"/>')
+
+
+def pcb_icon(cx, cy, s):
+    o = f'<rect x="{cx - s * 0.5:.1f}" y="{cy - s * 0.36:.1f}" width="{s:.1f}" height="{s * 0.72:.1f}" rx="{s * 0.08:.1f}" fill="{SAGE}" stroke="{INK}" stroke-width="{s * 0.04:.1f}"/>'
+    o += (f'<path d="M{cx - s * 0.36:.1f} {cy - s * 0.2:.1f} H{cx - s * 0.16:.1f} M{cx - s * 0.36:.1f} {cy + s * 0.2:.1f} H{cx - s * 0.2:.1f} V{cy + s * 0.06:.1f} '
+          f'M{cx + s * 0.16:.1f} {cy:.1f} H{cx + s * 0.36:.1f} M{cx + s * 0.16:.1f} {cy - s * 0.18:.1f} H{cx + s * 0.3:.1f} V{cy - s * 0.24:.1f}" stroke="{HONEYL}" stroke-width="{s * 0.04:.1f}" stroke-linecap="round" fill="none"/>')
+    o += "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{s * 0.04:.1f}" fill="{HONEY}"/>'
+                 for x, y in ((cx - s * 0.38, cy - s * 0.2), (cx - s * 0.38, cy + s * 0.2), (cx + s * 0.38, cy), (cx + s * 0.3, cy - s * 0.26)))
+    return o + f'<rect x="{cx - s * 0.16:.1f}" y="{cy - s * 0.16:.1f}" width="{s * 0.32:.1f}" height="{s * 0.32:.1f}" rx="{s * 0.04:.1f}" fill="{NAVY9}"/>'
+
+
+def power_icon(cx, cy, r, color=W):
+    return (f'<path d="M{cx - r * 0.62:.1f} {cy - r * 0.6:.1f} A{r * 0.88:.1f} {r * 0.88:.1f} 0 1 0 {cx + r * 0.62:.1f} {cy - r * 0.6:.1f}" fill="none" stroke="{color}" '
+            f'stroke-width="{r * 0.2:.1f}" stroke-linecap="round"/>'
+            f'<path d="M{cx} {cy - r * 1.02:.1f} V{cy - r * 0.2:.1f}" stroke="{color}" stroke-width="{r * 0.2:.1f}" stroke-linecap="round"/>')
+
+
+def honey_jar(cx, cy, s):
+    return (f'<rect x="{cx - s * 0.36:.1f}" y="{cy - s * 0.3:.1f}" width="{s * 0.72:.1f}" height="{s * 0.78:.1f}" rx="{s * 0.16:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<rect x="{cx - s * 0.4:.1f}" y="{cy - s * 0.46:.1f}" width="{s * 0.8:.1f}" height="{s * 0.18:.1f}" rx="{s * 0.06:.1f}" fill="{NAVY}" stroke="{INK}" stroke-width="{s * 0.035:.1f}"/>'
+            f'<path d="M{cx - s * 0.12:.1f} {cy - s * 0.29:.1f} v{s * 0.1:.1f} a{s * 0.04:.1f} {s * 0.04:.1f} 0 0 0 {s * 0.08:.1f} 0 v-{s * 0.1:.1f} Z" fill="{HONEY}"/>'
+            f'<rect x="{cx - s * 0.26:.1f}" y="{cy - s * 0.02:.1f}" width="{s * 0.52:.1f}" height="{s * 0.3:.1f}" rx="{s * 0.05:.1f}" fill="{PAPER}"/>'
+            + t(cx, cy + s * 0.18, "</>", s * 0.17, NAVY, M, 700))
+
+
+def git_graph(cx, cy, s, color=W, node=HONEY):
+    return (f'<path d="M{cx - s * 0.2:.1f} {cy + s * 0.5:.1f} V{cy - s * 0.5:.1f} M{cx - s * 0.2:.1f} {cy + s * 0.22:.1f} Q{cx - s * 0.2:.1f} {cy - s * 0.04:.1f} {cx + s * 0.22:.1f} {cy - s * 0.12:.1f} V{cy - s * 0.32:.1f}" '
+            f'fill="none" stroke="{color}" stroke-width="{s * 0.08:.1f}" stroke-linecap="round" stroke-linejoin="round"/>'
+            + "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{s * 0.1:.1f}" fill="{f}" stroke="{color}" stroke-width="{s * 0.05:.1f}"/>'
+                      for x, y, f in ((cx - s * 0.2, cy + s * 0.36, node), (cx - s * 0.2, cy - s * 0.36, node), (cx + s * 0.22, cy - s * 0.36, BRICK))))
+
+
+def mountains(x0, y0, w, h):
+    return (f'<path d="M{x0} {y0 + h} L{x0 + w * 0.28} {y0 + h * 0.3} L{x0 + w * 0.45} {y0 + h * 0.62} L{x0 + w * 0.66} {y0} L{x0 + w} {y0 + h} Z" fill="{SAGE}"/>'
+            f'<path d="M{x0 + w * 0.66} {y0} L{x0 + w * 0.58} {y0 + h * 0.22} L{x0 + w * 0.66} {y0 + h * 0.17} L{x0 + w * 0.73} {y0 + h * 0.24} Z" fill="{W}"/>')
+
+
+def proton(cx, cy, r, kind="happy"):
+    return (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{BRICK}" stroke="{INK}" stroke-width="{r * 0.06:.1f}"/>'
+            f'<circle cx="{cx + r * 0.72:.1f}" cy="{cy - r * 0.72:.1f}" r="{r * 0.3:.1f}" fill="{W}" stroke="{INK}" stroke-width="{r * 0.05:.1f}"/>'
+            f'<path d="M{cx + r * 0.58:.1f} {cy - r * 0.72:.1f} H{cx + r * 0.86:.1f} M{cx + r * 0.72:.1f} {cy - r * 0.86:.1f} V{cy - r * 0.58:.1f}" stroke="{BRICK}" stroke-width="{r * 0.09:.1f}" stroke-linecap="round"/>'
+            + face(cx, cy + r * 0.04, r * 1.2, kind, W))
+
+
+def house_ohm(cx, cy, s):
+    return (f'<rect x="{cx - s * 0.36:.1f}" y="{cy - s * 0.06:.1f}" width="{s * 0.72:.1f}" height="{s * 0.5:.1f}" fill="{PAPER}" stroke="{INK}" stroke-width="{s * 0.03:.1f}"/>'
+            f'<rect x="{cx + s * 0.18:.1f}" y="{cy - s * 0.46:.1f}" width="{s * 0.1:.1f}" height="{s * 0.24:.1f}" fill="{BRICK}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+            f'<path d="M{cx - s * 0.5:.1f} {cy - s * 0.04:.1f} L{cx:.1f} {cy - s * 0.5:.1f} L{cx + s * 0.5:.1f} {cy - s * 0.04:.1f} Z" fill="{NAVY}" stroke="{INK}" stroke-width="{s * 0.03:.1f}" stroke-linejoin="round"/>'
+            + ohm(cx, cy - s * 0.18, s * 0.1, W, s * 0.035)
+            + f'<rect x="{cx - s * 0.08:.1f}" y="{cy + s * 0.18:.1f}" width="{s * 0.16:.1f}" height="{s * 0.26:.1f}" rx="{s * 0.06:.1f}" fill="{HONEY}" stroke="{INK}" stroke-width="{s * 0.025:.1f}"/>'
+            f'<rect x="{cx - s * 0.28:.1f}" y="{cy + s * 0.06:.1f}" width="{s * 0.14:.1f}" height="{s * 0.12:.1f}" fill="{SKY}" stroke="{INK}" stroke-width="{s * 0.02:.1f}"/>'
+            f'<rect x="{cx + s * 0.14:.1f}" y="{cy + s * 0.06:.1f}" width="{s * 0.14:.1f}" height="{s * 0.12:.1f}" fill="{SKY}" stroke="{INK}" stroke-width="{s * 0.02:.1f}"/>')
+
+
+def bread(cx, cy, s):
+    o = (f'<path d="M{cx - s * 0.5:.1f} {cy + s * 0.3:.1f} V{cy - s * 0.08:.1f} Q{cx - s * 0.62:.1f} {cy - s * 0.36:.1f} {cx - s * 0.3:.1f} {cy - s * 0.38:.1f} '
+         f'H{cx + s * 0.3:.1f} Q{cx + s * 0.62:.1f} {cy - s * 0.36:.1f} {cx + s * 0.5:.1f} {cy - s * 0.08:.1f} V{cy + s * 0.3:.1f} Z" fill="{HONEYL}" stroke="{HONEY}" stroke-width="{s * 0.06:.1f}" stroke-linejoin="round"/>'
+         f'<path d="M{cx - s * 0.4:.1f} {cy - s * 0.16:.1f} H{cx + s * 0.4:.1f}" stroke="{BRICK}" stroke-width="{s * 0.02:.1f}"/>'
+         f'<path d="M{cx - s * 0.4:.1f} {cy + s * 0.22:.1f} H{cx + s * 0.4:.1f}" stroke="{NAVY}" stroke-width="{s * 0.02:.1f}"/>')
+    for j in range(4):
+        for i in range(9):
+            o += f'<circle cx="{cx - s * 0.36 + i * s * 0.09:.1f}" cy="{cy - s * 0.08 + j * s * 0.08:.1f}" r="{s * 0.017:.1f}" fill="{INK}" opacity="0.55"/>'
+    return o
+
+# ---------------------------------------------------------------- G · with the club seal
+
+add("G01", "logolu", "Mühür · klasik", 200, 200, 50, circle(100, 98, NAVY) + seal(100, 100, 168))
+add("G02", "logolu", "Mühür · beyaz", 200, 200, 50, circle(100, 98, SAGE) + seal(100, 100, 160, True))
+add("G03", "logolu", "Mühür · bal halkası", 200, 200, 50, circle(100, 98, HONEY, HONEYL) + seal(100, 100, 148))
+add("G04", "logolu", "Mühür · MEMBER", 200, 236, 48, rrect(200, 236, 30, SKY) + seal(100, 92, 150)
+    + f'<rect x="34" y="178" width="132" height="36" rx="18" fill="{NAVY}"/>' + t(100, 203, "MEMBER", 19, W, F, 700, ls=2))
+add("G05", "logolu", "Mühür · laptop bandı", 320, 120, 75, rrect(320, 120, 22, NAVY) + seal(64, 60, 90)
+    + t(122, 52, "IUS ENGINEERING", 19, W, G, 700, "start") + t(122, 76, "CLUB", 19, HONEY, G, 700, "start")
+    + t(122, 96, "SARAJEVO · EST. 2026", 10.5, SKY, M, 600, "start", ls=1))
+add("G06", "logolu", "Mühür · hex", 174, 200, 44, hexs(NAVY) + seal(87, 100, 140, True))
+add("G07", "logolu", "I love IEC", 300, 120, 70, rrect(300, 120, 60, PAPER, stroke=NAVY) + t(60, 78, "I", 46, NAVY9, F, 700)
+    + heart(114, 62, 20) + seal(222, 60, 88))
+add("G08", "logolu", "Mühür · rozet", 220, 220, 50, scallop(110, 96, 18, SAGE) + seal(110, 110, 150))
+add("G09", "logolu", "Mühür · dişli", 220, 220, 52, circle(110, 108, NAVY9) + gear(110, 110, 94, 84, 20, HONEY, 78, NAVY9)
+    + seal(110, 110, 148))
+add("G10", "logolu", "Mühür · kurucu üye", 220, 220, 52, burst(110, 108, 18, HONEY) + seal(110, 92, 118)
+    + t(110, 172, "FOUNDING", 16, NAVY9, F, 700) + t(110, 190, "2026", 12, W, M, 700, ls=1))
+add("G11", "logolu", "Robot · logolu tabela", 220, 250, 50, rrect(220, 250, 30, SKY)
+    + limb(86, 108, 56, 178, 80) + limb(134, 108, 164, 178, 80) + robot(110, 80, 78) + seal(110, 182, 104)
+    + f'<circle cx="55" cy="180" r="6" fill="{INK}"/><circle cx="165" cy="180" r="6" fill="{INK}"/>')
+add("G12", "logolu", "Mühür · şişe bandı", 130, 300, 32, rrect(130, 300, 30, NAVY) + seal(65, 70, 100, True)
+    + t(65, 162, "BUILD", 22, W, F, 700) + t(65, 196, "BREAK", 22, HONEY, F, 700) + t(65, 230, "LEARN", 22, SKY, F, 700)
+    + t(65, 268, "IEC · 2026", 10, SKY, M, 600, ls=1))
+add("G13", "logolu", "Laba geldim damgası", 280, 180, 66, rrect(280, 180, 16, CREAM)
+    + f'<rect x="18" y="18" width="244" height="144" rx="10" fill="none" stroke="{BRICK}" stroke-width="2.4" stroke-dasharray="7 5"/>'
+    + seal(80, 90, 100) + t(206, 76, "VISITED", 22, BRICK, G, 700) + t(206, 104, "IEC LAB", 22, NAVY9, G, 700)
+    + t(206, 128, "SARAJEVO · 2026", 10, NAVY, M, 600, ls=0.5))
+add("G14", "logolu", "Mühür · mini", 120, 120, 30, circle(60, 58, NAVY) + seal(60, 60, 92))
+
+# ---------------------------------------------------------------- I · the IEC bee
+
+add("I01", "ari", "Arı · merhaba", 220, 220, 50, circle(110, 108, SKY) + limb(140, 100, 166, 70, 84) + bee(110, 94, 84)
+    + f'<path d="M172 58 q5 6 0 12 M179 53 q8 8 0 19" fill="none" stroke="{NAVY4}" stroke-width="3" stroke-linecap="round"/>'
+    + t(110, 180, "bzz, hi!", 20, NAVY9, F, 700))
+add("I02", "ari", "Arı · kodluyor", 240, 220, 55, rrect(240, 220, 30, CREAM) + bee(120, 86, 80)
+    + f'<rect x="66" y="104" width="108" height="70" rx="8" fill="{NAVY4}" stroke="{INK}" stroke-width="2.6"/>' + seal(120, 139, 44)
+    + f'<rect x="54" y="172" width="132" height="10" rx="5" fill="{NAVY9}"/>' + limb(90, 100, 78, 108, 80) + limb(150, 100, 162, 108, 80)
+    + t(120, 199, "coding...", 18, NAVY9, F, 700))
+add("I03", "ari", "Arı · lehimliyor", 220, 220, 50, circle(110, 108, SAGEL) + bee(96, 92, 80) + iron(166, 140, 50, 225)
+    + limb(128, 104, 142, 116, 80) + smoke(171, 131, 6) + t(110, 182, "solder time", 18, NAVY9, F, 700))
+add("I04", "ari", "Arı · uykuda", 220, 220, 50, circle(110, 108, NAVY) + bee(104, 98, 84, "sleepy")
+    + t(150, 92, "z", 10, HONEYL, F, 700) + t(158, 80, "z", 13, HONEYL, F, 700) + t(170, 64, "z", 17, HONEYL, F, 700)
+    + t(110, 180, "sleep mode", 13, HONEYL, M, 700, ls=1))
+add("I05", "ari", "Arı · kahve", 220, 220, 50, circle(110, 108, CREAM) + bee(110, 88, 78) + cup(104, 134, 40)
+    + limb(80, 112, 90, 128, 78) + limb(140, 112, 124, 126, 78) + t(110, 186, "kahva first", 17, NAVY9, F, 700))
+add("I06", "ari", "Arı · baret", 220, 220, 50, circle(110, 108, HONEYL) + bee(110, 96, 84) + hardhat(110, 96, 42)
+    + t(110, 180, "builder bee", 18, NAVY9, F, 700))
+add("I07", "ari", "Arı · mezun", 220, 220, 50, circle(110, 108, SKY) + bee(110, 98, 80) + gradcap(110, 98, 40)
+    + t(110, 180, "Bee.Sc.", 22, NAVY9, F, 700))
+add("I08", "ari", "Arı · kupa", 220, 220, 50, circle(110, 108, NAVY9)
+    + confetti([(60, 70, HONEY, 20), (158, 62, SKY, -30), (66, 128, BRICK, 45), (156, 124, SAGE, 10), (140, 44, W, 60), (78, 44, HONEYL, -20)])
+    + bee(110, 86, 74) + trophy(110, 138, 40) + limb(82, 112, 92, 128, 74) + limb(138, 112, 128, 128, 74)
+    + t(110, 186, "winner", 18, HONEY, F, 700))
+add("I09", "ari", "Arı · kalp", 220, 220, 50, circle(110, 108, SKY) + bee(110, 90, 80) + heart(110, 134, 15)
+    + limb(80, 112, 98, 130, 80) + limb(140, 112, 122, 130, 80) + t(110, 182, "bee kind", 19, NAVY9, F, 700))
+add("I10", "ari", "Arı · astronot", 220, 220, 50, circle(110, 108, NAVY9)
+    + star(54, 70, 5, W) + star(166, 82, 4, HONEYL) + star(62, 140, 3.5, HONEYL) + star(160, 146, 4.5, W)
+    + bee(110, 100, 72) + helmet(110, 100, 36) + t(110, 184, "space bee", 13, W, M, 700, ls=1))
+add("I11", "ari", "Arı · dedektif", 220, 220, 50, circle(110, 108, HONEYL) + bee(94, 90, 76) + magnifier(148, 118, 20)
+    + bug(148, 119, 20) + f'<circle cx="148" cy="118" r="20" fill="none" stroke="{INK}" stroke-width="3.2"/>'
+    + t(110, 182, "found it!", 19, NAVY9, F, 700))
+add("I12", "ari", "Arı · tamirci", 220, 220, 50, circle(110, 108, SAGEL) + bee(100, 92, 78)
+    + f'<g transform="translate(304 0) scale(-1 1)">{wrench(152, 120, 50, NAVY4)}</g>' + limb(126, 112, 134, 130, 78)
+    + t(110, 182, "fixed it!", 19, NAVY9, F, 700))
+add("I13", "ari", "Arı · parti", 220, 220, 50, circle(110, 108, SKY)
+    + confetti([(56, 84, HONEY, 30), (164, 92, BRICK, -20), (62, 132, SAGE, 70), (158, 136, NAVY, 15), (150, 52, HONEY, -45)])
+    + bee(110, 98, 80) + partyhat(110, 98, 40) + t(110, 182, "ship it!", 20, NAVY9, F, 700))
+add("I14", "ari", "Arı · kitap", 220, 220, 50, circle(110, 108, CREAM) + bee(110, 86, 76) + book(110, 136, 64)
+    + t(110, 186, "exam mode", 17, NAVY9, F, 700))
+add("I15", "ari", "Arı · odak modu", 220, 220, 50, circle(110, 108, NAVY) + bee(110, 98, 80) + headphones(110, 98, 40)
+    + "".join(f'<circle cx="{x}" cy="{y}" r="4.5" fill="{HONEYL}"/><path d="M{x + 4} {y} V{y - 16} q6 2 8 9" fill="none" '
+              f'stroke="{HONEYL}" stroke-width="2.6" stroke-linecap="round"/>' for x, y in ((48, 92), (160, 72)))
+    + t(110, 182, "focus mode", 13, HONEYL, M, 700, ls=1))
+add("I16", "ari", "Arı · LGTM", 240, 180, 58, rrect(240, 180, 28, SAGEL) + bee(70, 90, 74) + limb(100, 100, 126, 92, 74)
+    + sign(124, 46, 98, 76, W) + t(173, 88, "LGTM", 26, SAGE, G, 700) + check(173, 104, 16, NAVY, 4)
+    + t(120, 158, "looks good to me", 10, NAVY, M, 600, ls=0.5))
+add("I17", "ari", "Arı · kovan zihni", 260, 170, 62, rrect(260, 170, 30, NAVY9)
+    + honeycomb(lambda x, y: 20 <= x <= 240 and 20 <= y <= 150, 11, NAVY, 10, 10, 250, 160, 1.4)
+    + bee(70, 88, 46) + bee(130, 78, 46, "wink") + bee(190, 88, 46) + t(130, 146, "hive mind", 20, HONEY, F, 700))
+add("I18", "ari", "Arı · burek molası", 220, 220, 50, circle(110, 108, CREAM) + bee(110, 86, 76, "love") + burek(110, 138, 60)
+    + t(110, 186, "burek break", 17, NAVY9, F, 700))
+add("I19", "ari", "Arı · Saraybosna", 240, 220, 55, rrect(240, 220, 30, SKY) + sebilj(176, 130, 78) + bee(78, 102, 72)
+    + t(120, 198, "Sarajevo bee", 19, NAVY9, F, 700))
+add("I20", "ari", "Arı · IEC logosu", 220, 220, 50, circle(110, 108, HONEYL) + bee(110, 70, 62) + seal(110, 138, 84))
+
+# ---------------------------------------------------------------- H · cute hardware
+
+add("H01", "tatli", "Vida · mutlu", 220, 220, 48, circle(110, 108, SKY) + screw(110, 104, 112))
+add("H02", "tatli", "Somun · aşık", 220, 220, 48, circle(110, 108, SAGEL) + nut(110, 106, 110, "love", hole=SAGEL))
+add("H03", "tatli", "Vida & somun · tam uyum", 260, 200, 60, rrect(260, 200, 28, HONEYL) + screw(78, 92, 96)
+    + nut(184, 104, 92, "wink", hole=HONEYL) + heart(131, 70, 11) + t(130, 182, "perfect fit", 20, NAVY9, F, 700))
+add("H04", "tatli", "Dişliler · iyi kavrar", 270, 200, 62, rrect(270, 200, 28, SKY) + gear_face(92, 92, 116, HONEY)
+    + gear_face(188, 98, 100, NAVY4, "wink", 0.16) + t(135, 180, "we mesh well", 18, NAVY9, F, 700))
+add("H05", "tatli", "Transistör · açık", 220, 220, 48, circle(110, 108, HONEYL) + transistor(110, 92, 110)
+    + t(110, 182, "switched on", 18, NAVY9, F, 700))
+add("H06", "tatli", "Diyot · tek yön", 300, 130, 70, rrect(300, 130, 26, SKY) + diode(98, 65, 100)
+    + t(232, 58, "one way", 21, NAVY9, F, 700) + t(232, 84, "only", 21, BRICK, F, 700)
+    + f'<path d="M208 102 H254 M245 94 L255 102 L245 110" fill="none" stroke="{NAVY}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>')
+add("H07", "tatli", "Potansiyometre · aç sesi", 220, 220, 48, circle(110, 108, PAPER) + knob(110, 100, 110)
+    + t(110, 184, "turn it up", 18, NAVY9, F, 700))
+add("H08", "tatli", "Geliştirme kartı", 260, 180, 60, rrect(260, 180, 26, SKY) + devboard(130, 86, 150)
+    + t(130, 164, "it blinks!", 18, NAVY9, F, 700))
+add("H09", "tatli", "Servo · hemen", 220, 220, 48, circle(110, 108, HONEYL) + servo(110, 110, 120)
+    + t(110, 182, "on it!", 20, NAVY9, F, 700))
+add("H10", "tatli", "Multimetre · vibe check", 220, 220, 48, circle(110, 108, SKY) + multimeter(110, 96, 112)
+    + t(110, 184, "vibe check", 18, NAVY9, F, 700))
+add("H11", "tatli", "Havya · çok sıcak", 300, 120, 72, rrect(300, 120, 60, NAVY9)
+    + f'<path d="M24 60 L52 54 V66 Z" fill="{SKY}" stroke="{SKY}" stroke-width="2" stroke-linejoin="round"/>'
+    + f'<rect x="50" y="56" width="40" height="8" fill="{NAVY4}"/><rect x="88" y="50" width="12" height="20" rx="3" fill="{SKY}"/>'
+    + f'<rect x="98" y="40" width="88" height="40" rx="20" fill="{BRICK}" stroke="{INK}" stroke-width="2.4"/>' + face(142, 60, 34, "happy", W)
+    + smoke(30, 47, 7) + t(242, 56, "too hot", 19, HONEY, F, 700) + t(242, 80, "to handle", 16, W, F, 700))
+add("H12", "tatli", "3D yazıcı · kalp basıyor", 220, 220, 48, circle(110, 108, SAGEL) + printer3d(110, 100, 110))
+add("H13", "tatli", "Mıknatıs · çekici", 220, 220, 48, circle(110, 108, SKY) + heart(58, 74, 6) + heart(164, 70, 7) + heart(150, 44, 5)
+    + magnet(110, 96, 110) + t(110, 182, "attractive", 19, NAVY9, F, 700))
+add("H14", "tatli", "Atom · önemlisin", 220, 220, 48, circle(110, 108, PAPER) + atom(110, 100, 120)
+    + t(110, 184, "you matter", 19, NAVY9, F, 700))
+add("H15", "tatli", "Hesap makinesi", 220, 220, 48, circle(110, 108, HONEYL) + calculator(110, 98, 112)
+    + t(110, 184, "I count on you", 16, NAVY9, F, 700))
+add("H16", "tatli", "Disket · kaydedildi", 220, 220, 48, circle(110, 108, SKY) + floppy(110, 100, 110)
+    + t(110, 182, "saved!", 20, NAVY9, F, 700))
+add("H17", "tatli", "USB · üçüncü deneme", 220, 220, 48, circle(110, 108, SAGEL) + usb(110, 102, 116)
+    + t(110, 184, "3rd try lucky", 16, NAVY9, F, 700))
+add("H18", "tatli", "Enter tuşu", 200, 200, 45, rrect(200, 200, 30, SKY) + enter_key(100, 100, 150))
+add("H19", "tatli", "Fare · fare", 220, 220, 48, circle(110, 108, HONEYL) + mouse_pc(108, 100, 120))
+add("H20", "tatli", "Router · tam çekiyor", 220, 220, 48, circle(110, 108, SKY) + router(110, 108, 120)
+    + t(110, 184, "full bars", 18, NAVY9, F, 700))
+add("H21", "tatli", "Rover · kaşif", 260, 180, 60, rrect(260, 180, 26, HONEYL) + rover(132, 108, 130))
+add("H22", "tatli", "Drone · yüksekten", 220, 220, 48, circle(110, 108, SKY) + drone(110, 104, 120)
+    + t(110, 176, "fly high", 18, NAVY9, F, 700))
+
+# ---------------------------------------------------------------- J · achievement badges
+
+
+def badge(sid, name, fill, icon, l1, l2, c1=W, c2=HONEY):
+    def fs(s):
+        return min(17, round(112 / (len(s) * 0.64), 1))
+    add(sid, "rozet", name, 220, 220, 48, scallop(110, 96, 18, fill) + icon + t(110, 142, l1, fs(l1), c1, F, 700)
+        + t(110, 164, l2, fs(l2), c2, F, 700))
+
+
+badge("J01", "İlk commit", NAVY, f'<path d="M74 84 H146" stroke="{W}" stroke-width="6" stroke-linecap="round"/>'
+      f'<circle cx="110" cy="84" r="15" fill="{HONEY}" stroke="{W}" stroke-width="5"/>', "FIRST", "COMMIT")
+badge("J02", "İlk devre kartı", NAVY9, pcb_icon(110, 84, 70), "FIRST", "PCB")
+badge("J03", "Lehimden sağ çıktım", BRICK, iron(128, 104, 66, 225, HONEY) + star(140, 64, 7, HONEYL), "SOLDER", "SURVIVOR", W, HONEYL)
+badge("J04", "Labda 100 saat", HONEY, clock(110, 84, 30), "100 HOURS", "IN THE LAB", NAVY9, W)
+badge("J05", "Bug avcısı", SAGE, f'<circle cx="110" cy="84" r="27" fill="none" stroke="{W}" stroke-width="4"/>'
+      f'<path d="M110 50 V62 M110 106 V118 M76 84 H88 M132 84 H144" stroke="{W}" stroke-width="4" stroke-linecap="round"/>'
+      + bug(110, 86, 40), "BUG", "HUNTER", W, NAVY9)
+badge("J06", "Gece kuşu", NAVY9, f'<circle cx="140" cy="60" r="12" fill="{HONEYL}"/><circle cx="146" cy="56" r="10" fill="{NAVY9}"/>'
+      + owl(108, 88, 64), "NIGHT", "OWL")
+badge("J07", "Erkenci kuş", SKY, bird(106, 88, 70), "EARLY", "BIRD", NAVY9, BRICK)
+badge("J08", "Takım kaptanı", NAVY, f'<circle cx="110" cy="84" r="28" fill="{W}"/>' + t(110, 96, "C", 34, NAVY, G, 700), "TEAM", "CAPTAIN")
+badge("J09", "Demo kahramanı", BRICK, star(110, 84, 34, HONEY) + face(110, 88, 26, "happy"), "DEMO", "HERO", W, HONEYL)
+badge("J10", "Kod incelemecisi", SAGE, magnifier(104, 80, 20) + check(104, 81, 18, SAGE, 5), "CODE", "REVIEWER", W, NAVY9)
+badge("J11", "Eşli programlama", NAVY9, cursor(84, 60, 40, HONEY) + cursor(118, 66, 40, SKY), "PAIR", "PROGRAMMER")
+badge("J12", "Atölye konuşmacısı", HONEY, mic(110, 86, 64), "WORKSHOP", "SPEAKER", NAVY9, W)
+badge("J13", "Hackathon bitirdim", NAVY, flag_checkered(114, 86, 64), "HACKATHON", "FINISHER")
+badge("J14", "Açık kaynak", BRICK, heart(110, 84, 24, W) + t(110, 90, "</>", 14, BRICK, M, 700), "OPEN", "SOURCE", W, HONEYL)
+badge("J15", "Mentorun seçimi", SAGE, star(110, 84, 34, HONEYL) + check(110, 86, 15, NAVY, 4.5), "MENTOR'S", "PICK", W, NAVY9)
+badge("J16", "Önce güvenlik", HONEY, goggles(110, 84, 92), "SAFETY", "FIRST", NAVY9, W)
+
+# ---------------------------------------------------------------- K · laptop hexes (44 x 51 mm)
+
+add("K01", "hex", "IEC petek", 174, 200, 44, hexs(HONEY)
+    + honeycomb(in_hex(87, 100, 82), 12, HONEYL, 87 - 7 * 12 * math.sqrt(3), 100 - 6 * 18, 87 + 7 * 12 * math.sqrt(3), 100 + 6 * 18, 1.8)
+    + f'<rect x="22" y="62" width="130" height="80" rx="16" fill="{HONEY}"/>'
+    + t(87, 112, "IEC", 56, NAVY9, G, 700) + t(87, 130, "ENGINEERING CLUB", 8.5, NAVY9, M, 700, ls=0.8))
+add("K02", "hex", "Arı · hex", 174, 200, 44, hexs(SKY)
+    + honeycomb(in_hex(87, 100, 80), 14, W, 87 - 6 * 14 * math.sqrt(3), 100 - 5 * 21, 87 + 6 * 14 * math.sqrt(3), 100 + 5 * 21, 1.6)
+    + bee(87, 108, 84))
+add("K03", "hex", "Hive mind", 174, 200, 44, hexs(NAVY9)
+    + "".join(f'<polygon points="{" ".join(f"{x + 12 * math.cos(math.radians(60 * k - 90)):.1f},{y + 12 * math.sin(math.radians(60 * k - 90)):.1f}" for k in range(6))}" fill="{c}"/>'
+              for x, y, c in ((76.6, 74, HONEY), (97.4, 74, HONEYL), (87, 56, HONEY)))
+    + t(87, 124, "HIVE", 30, HONEY, G, 700) + t(87, 152, "MIND", 30, W, G, 700))
+add("K04", "hex", "</> build things", 174, 200, 44, hexs(NAVY) + t(87, 116, "</>", 48, W, M, 700)
+    + t(87, 146, "build things", 10, HONEYL, M, 600, ls=0.5))
+add("K05", "hex", "git branch", 174, 200, 44, hexs(SAGE) + git_graph(87, 88, 90) + t(87, 156, "branch out", 15, W, F, 700))
+add("K06", "hex", "Pi", 174, 200, 44, hexs(PAPER) + glyph("pi", 87, 92, 40, NAVY, 11) + t(87, 156, "3.14159", 13, NAVY9, M, 700, ls=1))
+add("K07", "hex", "Lambda", 174, 200, 44, hexs(NAVY4) + glyph("lambda", 87, 92, 40, HONEY, 11) + t(87, 156, "lambda", 13, W, M, 700, ls=1))
+add("K08", "hex", "Sigma · sum it up", 174, 200, 44, hexs(BRICK) + glyph("sigma", 87, 92, 38, W, 11) + t(87, 156, "sum it up", 13, W, M, 700))
+add("K09", "hex", "Ohm-azing", 174, 200, 44, hexs(SAGEL) + ohm(87, 92, 34, NAVY, 11) + t(87, 156, "ohm-azing", 13, NAVY9, M, 700))
+add("K10", "hex", "Curly crew", 174, 200, 44, hexs(HONEYL) + t(87, 118, "{ }", 54, NAVY, M, 700) + t(87, 150, "curly crew", 13, NAVY9, F, 700))
+add("K11", "hex", "0x1EC", 174, 200, 44, hexs(NAVY9) + t(87, 104, "0x1EC", 30, HONEY, M, 700) + t(87, 134, "= IEC", 18, W, M, 700)
+    + t(87, 154, "in hex", 10, SKY, M, 600))
+add("K12", "hex", "Sarajevo · hex", 174, 200, 44, hexs(NAVY) + mountains(35, 70, 104, 62) + t(87, 156, "SARAJEVO", 12, W, M, 700, ls=1.5))
+add("K13", "hex", "Bal kavanozu · sweet code", 174, 200, 44, hexs(SKY) + honey_jar(87, 104, 100))
+add("K14", "hex", "Build · Break · Learn", 174, 200, 44, hexs(HONEY) + t(87, 82, "BUILD", 24, NAVY9, F, 700)
+    + t(87, 112, "BREAK", 24, W, F, 700) + t(87, 142, "LEARN", 24, NAVY9, F, 700))
+
+# ---------------------------------------------------------------- L · more engineering jokes
+
+add("L01", "espri2", "Watt's up?", 220, 220, 50, circle(110, 108, NAVY9)
+    + "".join(f'<path d="M{110 + 44 * math.cos(math.radians(a)):.1f} {80 + 44 * math.sin(math.radians(a)):.1f} L{110 + 53 * math.cos(math.radians(a)):.1f} '
+              f'{80 + 53 * math.sin(math.radians(a)):.1f}" stroke="{HONEYL}" stroke-width="4" stroke-linecap="round"/>' for a in (-150, -120, -90, -60, -30))
+    + bulb(110, 80, 70) + face(110, 78, 40, "happy") + t(110, 170, "Watt's up?", 20, W, F, 700))
+add("L02", "espri2", "Ohm sweet ohm", 240, 200, 58, rrect(240, 200, 28, SAGEL) + house_ohm(120, 92, 130)
+    + t(120, 182, "ohm sweet ohm", 19, NAVY9, F, 700))
+add("L03", "espri2", "Stay positive", 220, 220, 50, circle(110, 108, HONEYL) + proton(108, 96, 46) + t(110, 180, "stay positive", 17, NAVY9, F, 700))
+add("L04", "espri2", "Nuts about engineering", 300, 130, 70, rrect(300, 130, 26, SKY) + nut(70, 65, 96, "love", hole=SKY)
+    + t(196, 60, "nuts about", 20, NAVY9, F, 700) + t(196, 88, "engineering", 22, NAVY, F, 700))
+add("L05", "espri2", "Screw it, let's build it", 300, 130, 70, rrect(300, 130, 65, HONEYL) + screw(62, 64, 84)
+    + t(186, 58, "screw it,", 22, NAVY9, F, 700) + t(186, 88, "let's build it", 19, BRICK, F, 700))
+add("L06", "espri2", "Byte me", 220, 220, 50, circle(110, 108, CREAM) + cookie(110, 92, 52, CREAM) + t(110, 178, "byte me", 22, NAVY9, F, 700))
+add("L07", "espri2", "It's a breadboard", 260, 190, 60, rrect(260, 190, 26, CREAM) + bread(130, 88, 170)
+    + t(130, 170, "it's a breadboard", 17, NAVY9, F, 700))
+add("L08", "espri2", "Current mood", 260, 150, 60, rrect(260, 150, 26, NAVY) + fat_bolt(30, 22, 106)
+    + t(184, 68, "current", 26, W, F, 700) + t(184, 100, "mood", 26, HONEY, F, 700))
+add("L09", "espri2", "Plot twist: typo", 280, 170, 64, bubble(280, 170, SKY) + t(140, 64, "plot twist:", 24, NAVY9, F, 700)
+    + t(140, 100, "it was a typo", 22, BRICK, F, 700))
+add("L10", "espri2", "Ask me about my side project", 300, 140, 70, rrect(300, 140, 24, HONEYL) + rocket(60, 68, 72)
+    + t(184, 62, "ask me about", 18, NAVY, F, 600) + t(184, 92, "my side project", 21, NAVY9, F, 700))
+add("L11", "espri2", "Kapatıp açtın mı?", 220, 220, 50, circle(110, 108, SAGE) + power_icon(110, 82, 34)
+    + t(110, 150, "turned it off", 17, W, F, 700) + t(110, 172, "and on again?", 17, SAGEL, F, 700))
+add("L12", "espri2", "Powered by snacks", 300, 120, 70, rrect(300, 120, 60, HONEY) + battery(70, 60, 64, 0.75, SAGE)
+    + t(190, 54, "powered by", 18, NAVY9, F, 600) + t(190, 84, "snacks", 26, W, F, 700))
+add("L13", "espri2", "final_final_v2", 300, 110, 70, rrect(300, 110, 20, NAVY9) + t(26, 48, "$ git commit -m", 15, SKY, M, 600, "start")
+    + t(26, 78, '"final_final_v2"', 17, HONEY, M, 700, "start") + f'<rect x="196" y="64" width="10" height="18" fill="{HONEYL}"/>')
+add("L14", "espri2", "I can fix that (probably)", 300, 130, 70, rrect(300, 130, 24, SKY) + wrench(62, 70, 74, NAVY)
+    + t(186, 64, "I can fix that", 22, NAVY9, F, 700) + t(186, 92, "(probably)", 15, NAVY, M, 600))
 
 json.dump(S, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False)
 print(len(S), "stickers;", {c: sum(1 for s in S if s["cat"] == c) for c in dict.fromkeys(s["cat"] for s in S)})
